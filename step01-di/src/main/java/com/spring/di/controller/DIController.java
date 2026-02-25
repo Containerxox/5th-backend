@@ -24,6 +24,12 @@ public class DIController {
 	// 필드 주입 v1
 //	@Autowired
 //	private DIService diService;
+//	// 필드 주입 v1 확인
+//	@PostConstruct
+//	public void init() {
+//		System.out.println("@PostConstruct");
+//		System.out.println("Controller ===> Service : " + diService);
+//	}
 	
 	// 생성자 주입 v2
 //	private final DIService disService;
