@@ -1,6 +1,7 @@
 package com.spring.di.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.spring.di.service.DIService;
@@ -15,7 +16,7 @@ public class DIController {
 	private DIService diService;
 	
 	@Autowired
-	public void setDIService(DIService diService) {
+	public void setDIService(@Qualifier("specialDIService") DIService diService) {
 		System.out.println("세터 주입");
 		System.out.println("Controller ===> Service: "+ diService);
 		this.diService = diService;
