@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/eclipse,windows,maven,gradle,java,macos
-# Edit at https://www.toptal.com/developers/gitignore?templates=eclipse,windows,maven,gradle,java,macos
+# Created by https://www.toptal.com/developers/gitignore/api/eclipse,windows,macos,maven,gradle,java,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=eclipse,windows,macos,maven,gradle,java,visualstudiocode
 
 ### Eclipse ###
 .metadata
@@ -9,7 +9,7 @@ tmp/
 *.bak
 *.swp
 *~.nib
-local.properties
+*.properties
 .settings/
 .loadpath
 .recommenders
@@ -145,6 +145,25 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
@@ -196,4 +215,4 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
-# End of https://www.toptal.com/developers/gitignore/api/eclipse,windows,maven,gradle,java,macos
+# End of https://www.toptal.com/developers/gitignore/api/eclipse,windows,macos,maven,gradle,java,visualstudiocode
