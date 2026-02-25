@@ -5,18 +5,22 @@ import org.springframework.stereotype.Component;
 
 import com.spring.di.service.DIService;
 
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Component
 public class DIController {
 	
-	private DIService diService;
+	// 생성자 주입 v2
+	private final DIService disService;
 	
-	
-	public DIController(DIService diService) {
-		System.out.println("DIController 생성자");
-		this.diService = diService;
-		System.out.println("Controller ===> Service: "+ diService);
-	}
+//	// 생성자 주입 v1
+//	private DIService diService;
+//	public DIController(DIService diService) {
+//		System.out.println("DIController 생성자");
+//		this.diService = diService;
+//		System.out.println("Controller ===> Service: "+ diService); //DIService의 객체정보를 출력
+//	}
 	
 //	private DIService service = new DIService(); //이제 필요 없다.
 	
