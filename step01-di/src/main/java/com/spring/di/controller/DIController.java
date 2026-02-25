@@ -11,12 +11,22 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class DIController {
 	
-	// 필드 주입 v1
-	@Autowired
+	// setter 메서드를 활용한 주입 v1
 	private DIService diService;
 	
+	@Autowired
+	public void setDIService(DIService diService) {
+		System.out.println("세터 주입");
+		System.out.println("Controller ===> Service: "+ diService);
+		this.diService = diService;
+	}
+	
+	// 필드 주입 v1
+//	@Autowired
+//	private DIService diService;
+	
 	// 생성자 주입 v2
-	private final DIService disService;
+//	private final DIService disService;
 	
 //	// 생성자 주입 v1
 //	private DIService diService;
