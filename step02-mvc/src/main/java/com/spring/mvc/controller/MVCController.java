@@ -1,5 +1,9 @@
 package com.spring.mvc.controller;
 
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +32,19 @@ public class MVCController {
 	
 	
 	// http://localhost:8080/test11
-	
+	// ResponseEntity : 응답시, HTTP 헤더 정보와 내용을 가공
+	@GetMapping(value = "/test11")
+	public ResponseEntity<Student> test11() {  // 리턴타입을 Student
+		System.out.println("MVCController : test11()");
+		
+		Student student = new Student(2, "cloud", "senior");
+		
+		// header, body
+		HttpHeaders headers = new HttpHeaders(); 
+		headers.add("Content-type", "application/json;charset=UTF-8");
+		
+		return new ResponseEntity<Student>(student, headers, HttpStatus.OK);
+	}
 	
 	// http://localhost:8080/test10
 	// model을 통해서 뷰템플릿에 전달
