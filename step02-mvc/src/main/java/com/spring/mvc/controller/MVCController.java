@@ -40,7 +40,9 @@ public class MVCController {
 
 	// http://localhost:8080/test6
 	// "{"sname":"web-mvc", "grade":"junior"}"
-	// Body에 Json 형식의 데이터를 전달
+	// Body에 Json 형식의 데이터담아서 서버에 전달하기
+	// 1) @RequestBody 생략 불가능
+	// 2) JSON -> java 객체 매핑 (스프링부트 내부의 jackson 라이브러리)
 //	@PostMapping(value = "/test6")
 //	public void test6(Student student) {  // ▷ 지금 이 경우, 자동 바인딩 안되고 있음
 //		System.out.println("MVCController : test6()");
