@@ -1,8 +1,12 @@
 package com.spring.mvc.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.spring.mvc.dto.Student;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -39,16 +43,31 @@ public class MVCController {
 
 	
 	// http://localhost:8080/test4?sid=web-mvc&grade=junior
+	// 데이터를 받아오고 객체로 만들고 싶어!
 	/*
 	 * Student
 	 * String sid
 	 * String grade
 	 * 
 	 */
+	@GetMapping(value = "/test4")
+	public void test4(String sid, String grade) {
+		System.out.println("MVCController : test4()");
+		System.out.println("sid : "+ sid + ", " + "grade : " + grade);
+		
+		Student student = new Student(1, sid, grade);
+		System.out.println(student);
+		
+	}
 
 	
 	// http://localhost:8080/test3?sid=web-mvc
-
+	@RequestMapping(value = "/test3", method = RequestMethod.GET)
+	public void test3(String sid) {
+		System.out.println("MVCController : test3()");
+		System.out.println("sid : "+ sid);
+	}
+	
 	
 	// http://localhost:8080/test2?sid=web-mvc
 	@RequestMapping(value = "/test2", method = RequestMethod.GET)
