@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.mvc.dto.Student;
 
@@ -31,15 +32,29 @@ public class MVCController {
 	
 	// http://localhost:8080/test10
 	// model을 통해서 뷰템플릿에 전달
+//	@GetMapping(value = "/test10")
+//	public String test10(Model model) {  
+//		System.out.println("MVCController : test10()");
+//		Student student = new Student(2, "cloud", "senior");
+//		
+//		model.addAttribute("student", student); //model이라는 객체에 student 객체를 담음. (JSP에서 사용(출력)하기 위해서)
+//		
+//		return "test"; 
+//	}
+	
+	// ModelAndView 이용하기
 	@GetMapping(value = "/test10")
-	public String test10(Model model) {  
+	public ModelAndView test10(ModelAndView mv) {  
 		System.out.println("MVCController : test10()");
 		Student student = new Student(2, "cloud", "senior");
 		
-		model.addAttribute("student", student); //model이라는 객체에 student 객체를 담음. (JSP에서 사용(출력)하기 위해서)
+		mv.addObject("student", student);
+		mv.setViewName("test");
 		
-		return "test"; 
+		return mv;
 	}
+	
+	
 	
 	// http://localhost:8080/test9
 	@GetMapping(value = "/test9")
