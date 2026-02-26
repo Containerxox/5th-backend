@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Controller
 public class MVCController {
 	
@@ -49,6 +51,14 @@ public class MVCController {
 
 	
 	// http://localhost:8080/test2?sid=web-mvc
+	@RequestMapping(value = "/test2", method = RequestMethod.GET)
+	public void test2(HttpServletRequest request) {
+		System.out.println("MVCController : test2()");
+		
+//		System.out.println(request.getContentType());
+		String sid = request.getParameter("sid");
+		System.out.println("sid : "+sid);
+	}
 
 	
 	// http://localhost:8080/test1
