@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.spring.mvc.dto.Student;
 
@@ -33,6 +34,12 @@ public class MVCController {
 	
 	
 	// http://localhost:8080/test8
+	// JSP 뷰 템플릿 활용
+	@GetMapping(value = "/test8")
+	public String test8() {
+		System.out.println("MVCController : test8()");
+		return "test";
+	}
 
 	
 	// http://localhost:8080/test7?emp=7369
@@ -84,7 +91,7 @@ public class MVCController {
 	 * 
 	 */
 	@GetMapping(value = "/test4")
-	public void test4(String sname, String grade) {
+	public void test4(@RequestParam String sname, String grade) { //@RequestParam 생략가능
 		System.out.println("MVCController : test4()");
 		System.out.println("sid : "+ sname + ", " + "grade : " + grade);
 		
