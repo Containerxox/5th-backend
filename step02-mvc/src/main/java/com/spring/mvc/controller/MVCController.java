@@ -42,7 +42,7 @@ public class MVCController {
 //		return "test"; 
 //	}
 	
-	// ModelAndView 이용하기
+	// ModelAndView 이용하기 (요즘은 잘 사용하지 않음)
 	@GetMapping(value = "/test10")
 	public ModelAndView test10(ModelAndView mv) {  
 		System.out.println("MVCController : test10()");
