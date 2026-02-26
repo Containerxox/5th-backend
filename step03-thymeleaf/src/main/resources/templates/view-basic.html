@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Thymeleaf View</title>
+</head>
+<body>
+	<h1>Thymeleaf View Basic</h1>
+	
+	<div th:text="${sid}">학번</div>
+	<div>학번 : [[${sid}]]</div>
+	<div th:text="${sname}"></div>
+	<div>이름 : [[${sname}]]</div>
+	
+	<hr>
+	
+	<div th:text=${tag}></div>
+	<div th:utext=${tag}></div>
+</body>
+</html>
