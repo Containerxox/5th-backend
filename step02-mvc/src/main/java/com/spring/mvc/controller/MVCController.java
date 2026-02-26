@@ -3,6 +3,8 @@ package com.spring.mvc.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,7 +39,19 @@ public class MVCController {
 
 
 	// http://localhost:8080/test6
-	// "{"sid"="web-mvc", "grade"="junior"}"
+	// "{"sname":"web-mvc", "grade":"junior"}"
+	// Body에 Json 형식의 데이터를 전달
+//	@PostMapping(value = "/test6")
+//	public void test6(Student student) {  // ▷ 지금 이 경우, 자동 바인딩 안되고 있음
+//		System.out.println("MVCController : test6()");
+//		System.out.println(student);
+//	}
+	@PostMapping(value = "/test6")
+	public void test6(@RequestBody Student student) {  // ▷ @RequestBody를 쓰면, body에 있는 value와 객체의필드명을 자동 바인딩
+		System.out.println("MVCController : test6()");
+		System.out.println(student);
+	}
+	
 
 	
 	// http://localhost:8080/test5?sname=web-mvc&grade=junior
