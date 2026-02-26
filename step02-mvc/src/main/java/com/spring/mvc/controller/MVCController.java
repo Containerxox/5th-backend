@@ -40,7 +40,7 @@ public class MVCController {
 	@GetMapping(value = "/test7/emp/{empno}")
 	public void test7(@PathVariable Integer empno) { // @PathVariable: 해당 경로에 포함되어 있는 변수를 가져오겠다라는 의미  
 		System.out.println("MVCController : test7()");
-		System.out.println(empno);
+		System.out.println("empno : " + empno);
 	}
 	
 	
