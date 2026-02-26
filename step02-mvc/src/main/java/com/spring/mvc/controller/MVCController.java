@@ -34,11 +34,11 @@ public class MVCController {
 	
 	
 	// http://localhost:8080/test8
-	// JSP 뷰 템플릿 활용
+	// JSP 뷰 템플릿 활용 
 	@GetMapping(value = "/test8")
-	public String test8() {
+	public String test8() {  // 리턴타입을 String으로 해줘야함.
 		System.out.println("MVCController : test8()");
-		return "test";
+		return "test"; //test.jsp (JSP 뷰템플릿) 파일을 리턴
 	}
 
 	
