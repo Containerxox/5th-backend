@@ -5,6 +5,39 @@
 <title>Insert title here</title>
 </head>
 <body>
+	
+	<!-- 반복문 -->
+	<ul th:each="student : ${students}">
+		<li th:text="${student.sid}"></li>
+		<li th:text="${studentStat}"></li>
+		<li th:text="${studentStat.count}"></li>
+	</ul>
 
+	
+	<!-- switch-case -->
+	<div th:if="${score == 100}">100점</div>
+	<div th:unless="${score == 100}">10점</div>
+	
+	<div th:switch="${view.grade.name()}">
+		<th:block th:case="JUNIOR">
+			<p>view는 주니어!</p>
+		</th:block>
+		<th:block th:case="SENIOR">
+			<p>view는 시니어!</p>
+		</th:block>
+		<th:block th:case="*">
+			<p>view의 grade 정보를 확인할 수 없음!</p>
+		</th:block>
+	</div>
+	
+	<!-- Elvis(?:) 연산자 (=삼항연산자)-->
+	<div th:text="${score} ?: 0"></div>
+	<!-- score 값이 있으면 score 출력, 없으면 0 출력-->
+	
+	<!-- 대소 비교--> <!-- 기호값을 사용하지 말자 (<, >, <=, >=)--> 
+	<div th:text="1 Le 10"></div>
+	<div th:text="1 ge 10"></div>
+	
+	
 </body>
 </html>

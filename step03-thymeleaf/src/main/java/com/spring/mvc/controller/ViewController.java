@@ -56,7 +56,7 @@ public class ViewController {
     }
 	
     @GetMapping(value = "/view-flow")
-    public String viewFlow() {
+    public String viewFlow(Model model) {
     	
     	//
         Student thyme = Student.builder()
@@ -76,18 +76,31 @@ public class ViewController {
 								.sname("view")
 								.grade(Grade.SENIOR)
 								.build();
+		
+		// 반복문
+		List<Student> students = List.of(thyme, leaf, view);
+		model.addAttribute("students", students);
+		
+		// 조건문
+		model.addAttribute("score", 100);
+		
+		// switch-case
+		model.addAttribute("view", view);
         
         return "view-flow";
     }
     
     @GetMapping(value = "/view-apply")
-    public String viewApply() {
+    public String viewApply(Model model) {
     	
         Student thyme = Student.builder()
 								.sid(20246001)
 								.sname("thyme")
 								.grade(Grade.JUNIOR)
 								.build();
+        
+        model.addAttribute("thyme", thyme);
+        
         
         return "view-apply";
     }

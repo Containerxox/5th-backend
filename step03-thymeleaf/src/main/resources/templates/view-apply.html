@@ -7,5 +7,17 @@
 <body>
 	<h1>Thymeleaf View Apply</h1>
 	
+	<!-- 링크 th:href -->
+	<a th:href="@{/view-basic}">view-basic 이동</a>
+	
+	<!-- Query String : ?name=value -->
+	<!-- http://localhost:8080/students?sid=20246001&sname=thyme -->
+	<a th:href="@{/students(sid=${thyme.sid},sname=${thyme.sname})}">쿼리스트링</a>
+	
+	<!-- Path Variable : /students/ -->
+	<!-- http://localhost:8080/students/20246001 -->
+	<a th:href="@{/students/{sid}(sid=${thyme.sid})}">경로 파라미터</a>
+	
+	
 </body>
 </html>
