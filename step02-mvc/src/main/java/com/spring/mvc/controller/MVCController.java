@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.mvc.dto.Student;
 
@@ -31,6 +32,15 @@ public class MVCController {
 
 	
 	// http://localhost:8080/test9
+	@GetMapping(value = "/test9")
+	@ResponseBody   // @ResponseBody 어노테이션 추가!
+	public Student test9() {  // 리턴타입을 Student
+		System.out.println("MVCController : test9()");
+		
+		Student student = new Student(2, "cloud", "senior");
+		
+		return student; 
+	}
 	
 	
 	// http://localhost:8080/test8
