@@ -17,8 +17,12 @@
 	
 	${2 > 3}
 	${student}
-	${student.sid}
-	${student.sname}
-	${student.grade}
+	<div>
+		<h2>${student.sid}</h2>
+		<p>${student.sid}</p>
+		<p>${student.grade}</p>
+	</div>
+	
+	
 </body>
 </html>
