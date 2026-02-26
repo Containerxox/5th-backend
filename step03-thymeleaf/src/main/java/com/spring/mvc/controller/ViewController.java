@@ -1,5 +1,9 @@
 package com.spring.mvc.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +42,15 @@ public class ViewController {
         // Object
         model.addAttribute("thyme", thyme);
         
+        // List
+        List<Student> students = List.of(thyme, leaf);
+        model.addAttribute("students", students);
         
+        // Map
+        Map<String, Student> studentMap = new HashMap<>();
+        studentMap.put("thyme", thyme);
+        studentMap.put("leaf", leaf);
+        model.addAttribute("studentMap", studentMap);
         
         return "view-object";
     }
