@@ -1,6 +1,7 @@
 package com.spring.mvc.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,11 +30,20 @@ public class MVCController {
 	
 	
 	// http://localhost:8080/test10
-
+	// model을 통해서 뷰템플릿에 전달
+	@GetMapping(value = "/test10")
+	public String test10(Model model) {  
+		System.out.println("MVCController : test10()");
+		Student student = new Student(2, "cloud", "senior");
+		
+		model.addAttribute("student", student); //model이라는 객체에 student 객체를 담음. (JSP에서 사용(출력)하기 위해서)
+		
+		return "test"; 
+	}
 	
 	// http://localhost:8080/test9
 	@GetMapping(value = "/test9")
-	@ResponseBody   // @ResponseBody 어노테이션 추가!
+	@ResponseBody   // @ResponseBody 어노테이션 추가!  // body안에 있는 java객체를 JSON 형식으로 클라이언트에게 리턴함
 	public Student test9() {  // 리턴타입을 Student
 		System.out.println("MVCController : test9()");
 		

@@ -16,5 +16,9 @@
 	%>
 	
 	${2 > 3}
+	${student}
+	${student.sid}
+	${student.sname}
+	${student.grade}
 </body>
 </html>
