@@ -3,6 +3,7 @@ package com.spring.mvc.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +36,14 @@ public class MVCController {
 
 	
 	// http://localhost:8080/test7?emp=7369
-	// http://localhost:8080/test7/emp/7369
+	// http://localhost:8080/test7/emp/7369   ->  고유한 ID값 7369을 어떻게 가져오지?
+	@GetMapping(value = "/test7/emp/{empno}")
+	public void test7(@PathVariable Integer empno) { // @PathVariable: 해당 경로에 포함되어 있는 변수를 가져오겠다라는 의미  
+		System.out.println("MVCController : test7()");
+		System.out.println(empno);
+	}
+	
+	
 
 
 	// http://localhost:8080/test6
