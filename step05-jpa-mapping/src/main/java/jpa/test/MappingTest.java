@@ -32,6 +32,20 @@ public class MappingTest {
 		
 		// 패러다임 불일치 해결 (위처럼 find 해줄 필요 없음)
 		// @JoinColumn + @ManyToOne  ->  create 모드 변경후, foriegn키 변경된 것 확인 후에 none모드로 변경
+//		Lecture lec = new Lecture();
+//		lec.setLname("Tech");
+//		em.persist(lec);
+//		
+//		Student stu = new Student();
+//		stu.setLecture(lec);
+//		stu.setSid(20242001);
+//		stu.setSname("jpa");
+//		em.persist(stu);
+		
+		Lecture foundLecture = em.find(Student.class, 20242001).getLecture();
+		System.out.println(foundLecture);
+		
+		
 		
 		
 		
