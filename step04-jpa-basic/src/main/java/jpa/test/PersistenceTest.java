@@ -77,8 +77,37 @@ public class PersistenceTest {
 		
 		// delete
 		// 20241002 학생 삭제
-		Student foundStu2 = em.find(Student.class, 20241002);
-		em.remove(foundStu2); // 영속성 영역에서 해당 entity 객체를 삭제
+//		Student foundStu2 = em.find(Student.class, 20241002);
+//		em.remove(foundStu2); // 영속성 영역에서 해당 entity 객체를 삭제
+		
+		
+		// 영속성 컨텍스트 (Persistence Context) 특징
+		// ▷ 1차 캐시
+		Student cashedStu1 = em.find(Student.class, 20241001);
+		System.out.println(cashedStu1);
+		
+		Student cashedStu2 = em.find(Student.class, 20241001);
+		System.out.println(cashedStu2);
+		// 같은 쿼리를 여러번 요청하는 경우
+		// context에 해당 정보를 담아두기 때문에
+		// DB로 다시 갈 필요 없이 context에서 뽑아옴
+		// 따라서 위에서는 select가 한번만 실행됨.
+		
+		
+		// ▷ 쓰기 지연
+		// 여러가지 작업을 한번에 실행
+		// 20241003, 'CLOUD'
+		// 20241004, 'JPA'
+		// COMMIT이 없다고 가정
+		
+		Student stu3 = new Student(20241003, "CLOUD");
+		Student stu4 = new Student(20241004, "JPA");
+		em.persist(stu3);
+		em.persist(stu4);
+		
+		// commit이 될 때, 위 2개에 대한 작업 내역이 실행됨!
+		
+		
 		
 		tx.commit();
 	}
