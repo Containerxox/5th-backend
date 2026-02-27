@@ -26,11 +26,15 @@
 	<button id="view-basic-btn">view-basic 이동</button>
 	
 	<hr>
+	
 	<!-- form 전달 -> request 내부에서 처리 -->
 	<form th:action="@{/form}" method='GET'>
 		<div>
 			<label for="sid">학생번호: </label>
 			<input id="sid" type="text" name="sid">
+			
+			<label for="sname">학생이름: </label>
+			<input id="sname" type="text" name="sname">
 		</div>
 		<button type="submit">전송</button>
 	</form>
