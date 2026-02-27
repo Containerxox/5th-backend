@@ -23,11 +23,18 @@
 	<button th:onclick="'location.href=\'' + @{/view-basic} + '\''">view-basic 이동</button>
 	<!-- 방법 2) 리터럴 대체하는 |...| 이용, location.href='주소' (주소는 따옴표로 감싸져야만 한다)-->
 	<button th:onclick="|location.href='@{/view-basic}'|">view-basic 이동</button>
+	<button id="view-basic-btn">view-basic 이동</button>
 	
 	<!-- 자바스크립트 인라인  --> 
 	<script th:inline="javascript">
 		let sid = [[${thyme.sid}]];
 		console.log(sid);
+		
+		const viewBasicBtn = document.getElementById("view-basic-btn");
+		viewBasicBtn.addEventListener('click', (e) => {
+			<!-- location.href='/view-basic'; --> 
+			location.href=[[@{/view-basic}]];
+		});
 	</script>
 	
 </body>
