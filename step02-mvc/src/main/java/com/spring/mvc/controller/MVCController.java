@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -121,10 +122,22 @@ public class MVCController {
 //		System.out.println(student);
 //	}
 	// Validation(유효성 검증하기)(값이 조건에 맞게 다 왔는지 확인)
+//	@PostMapping(value = "/test6")
+//	public void test6(@Valid @RequestBody Student student) {  // ▷ @Valid: 유효성 검증
+//		System.out.println("MVCController : test6()");
+//		System.out.println(student);
+//	}
+	// 유효성 검증 + 통과, 불통에 따라 view로 넘기기
 	@PostMapping(value = "/test6")
-	public void test6(@Valid @RequestBody Student student) {  // ▷ @Valid: 유효성 검증
+	public String test6(@Valid @RequestBody Student student, BindingResult bindingResult) {  // ▷ @Valid: 유효성 검증
 		System.out.println("MVCController : test6()");
 		System.out.println(student);
+		
+		if(bindingResult.hasErrors()) { // 유효성 검사 통과 X
+			return "student/form"; //다시 입력하세요 라는 페이지로 이동
+		}
+		
+		return "redirect:/students"; // 유효성 검사 통과 O 하면, 학생 목록 확인하는 페이지로 이동
 	}
 	
 
