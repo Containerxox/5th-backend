@@ -3,13 +3,13 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
    version="3.0">
-   <persistence-unit name="">
+   <persistence-unit name="persistence">
       <properties>
             <!-- JDBC Info -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/?serverTimezone=Asia/Seoul"/>
-            <property name="jakarta.persistence.jdbc.user" value=""/>
-            <property name="jakarta.persistence.jdbc.password" value=""/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/scott?serverTimezone=Asia/Seoul"/>
+            <property name="jakarta.persistence.jdbc.user" value="scott"/>
+            <property name="jakarta.persistence.jdbc.password" value="tiger"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/> <!-- MySQL 방언 사용 -->
 
             <!-- 추가 옵션 -->

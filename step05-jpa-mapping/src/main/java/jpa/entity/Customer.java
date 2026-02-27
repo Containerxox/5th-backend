@@ -12,7 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @ToString
-@Entity
+//@Entity
 public class Customer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

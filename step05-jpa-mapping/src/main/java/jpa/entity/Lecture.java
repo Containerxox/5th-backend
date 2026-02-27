@@ -19,7 +19,7 @@ import lombok.ToString;
 @Entity
 public class Lecture {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // autoIncrement 옵션
 	@Column(name = "lid")
 	private Long lid;
 	

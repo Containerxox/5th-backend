@@ -12,7 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-@Entity
+//@Entity
 public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
