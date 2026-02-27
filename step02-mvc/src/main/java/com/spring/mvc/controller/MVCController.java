@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.spring.mvc.dto.Student;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @Controller
 public class MVCController {
@@ -114,8 +115,14 @@ public class MVCController {
 //		System.out.println("MVCController : test6()");
 //		System.out.println(student);
 //	}
+//	@PostMapping(value = "/test6")
+//	public void test6(@RequestBody Student student) {  // ▷ @RequestBody를 쓰면, body에 있는 value와 객체의필드명을 자동 바인딩
+//		System.out.println("MVCController : test6()");
+//		System.out.println(student);
+//	}
+	// Validation(유효성 검증하기)(값이 조건에 맞게 다 왔는지 확인)
 	@PostMapping(value = "/test6")
-	public void test6(@RequestBody Student student) {  // ▷ @RequestBody를 쓰면, body에 있는 value와 객체의필드명을 자동 바인딩
+	public void test6(@Valid @RequestBody Student student) {  // ▷ @Valid: 유효성 검증
 		System.out.println("MVCController : test6()");
 		System.out.println(student);
 	}

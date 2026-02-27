@@ -11,15 +11,15 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Student {
-	
+
 	public enum Grade {
 		JUNIOR, SENIOR;
 	}
-	
+
 	private Integer sid;
 	private String sname;
 	private Grade grade;
-	
+
 	@Builder
 	public Student(Integer sid, String sname, Grade grade) {
 		super();
@@ -27,6 +27,5 @@ public class Student {
 		this.sname = sname;
 		this.grade = grade;
 	}
-	
-}
 
+}
