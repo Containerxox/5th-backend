@@ -5,7 +5,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.spring.mvc.dto.Student;
 import com.spring.mvc.dto.Student.Grade;
@@ -15,15 +14,8 @@ import com.spring.mvc.dto.User;
 @Controller
 public class FormController {
 	
-	
-//	@GetMapping(value="/input-form")
-//	public String moveInputForm(User user, Model model) {
-//		System.out.println("InputForm");
-//		System.out.println(user);
-//		model.addAttribute("user",user);
-//		
-//		return "output";
-//	}
+	// ======================================================
+	// 실습 : send 버튼 클릭 → @PostMapping으로 /input-data 서버로 요청
 	
 	@GetMapping(value="/input-form")
 	public String moveInputForm() {
@@ -36,11 +28,12 @@ public class FormController {
 	public String moveOutput(@ModelAttribute User user, Model model) {
 		System.out.println("Output");
 		System.out.println(user);
-		 model.addAttribute("user", user);
+		model.addAttribute("user", user);
 		
 		return "output";
 	}
 	
+	// ================================================================
 	
 	@GetMapping(value="/form")
 	public String form(Student student, Model model) {

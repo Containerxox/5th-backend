@@ -1,14 +1,13 @@
 package com.spring.mvc.dto;
 
-import com.spring.mvc.dto.Student.Grade;
-
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -17,11 +16,4 @@ public class User {
 	private String email;
 	private String message;
 
-	@Builder
-	public User(String name, String email, String message) {
-		super();
-		this.name = name;
-		this.email = email;
-		this.message = message;
-	}
 }

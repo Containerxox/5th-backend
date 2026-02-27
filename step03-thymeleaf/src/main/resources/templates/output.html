@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>W3.CSS Template</title>
 <meta charset="UTF-8">
@@ -14,13 +14,13 @@
       <h1>Result</h1>
       <p class="w3-opacity">Result</p>
       <div class="w3-section">
-        <span>Name : [[${user.name}]]</span>
+        <span>Name : <b>[[${user.name}]]</b></span>
       </div>
       <div class="w3-section">
-        <span>Email : [[${user.email}]]</span>
+        <span>Email : <b>[[${user.email}]]</b></span>
       </div>
       <div class="w3-section">
-        <span>Message : [[${user.message}]]</span>
+        <span>Message : <b>[[${user.message}]]</b></span>
         </div>
     </div>
   </div>
