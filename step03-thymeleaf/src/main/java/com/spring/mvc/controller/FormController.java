@@ -33,6 +33,16 @@ public class FormController {
 		return "output";
 	}
 	
+	@GetMapping(value="/update-form")
+	public String moveUpdateForm(Model model) {
+		System.out.println("UpdateForm");
+		
+		User user = new User("front", "test@test.com", "front");
+		model.addAttribute("user", user);
+		
+		return "update";
+	}
+	
 	// ================================================================
 	
 	@GetMapping(value="/form")

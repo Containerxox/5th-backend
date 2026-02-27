@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>W3.CSS Template</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+</head>
+<body class="w3-content" style="max-width:1300px">
+
+<!-- Third Grid: Swing By & Contact -->
+<div class="w3-row" id="contact">
+  <div class="w3-teal w3-container" style="height:700px">
+    <div class="w3-padding-64 w3-padding-large">
+      <h1>Update</h1>
+      <p class="w3-opacity">Update Info</p>
+      <form class="w3-container w3-card w3-padding-32 w3-white" th:action="@{/update-data}" th:object="${user}">
+        <div class="w3-section">
+          <label for="name">Name</label>
+          <input class="w3-input" style="width:100%;" type="text" required th:field="*{name}"> <!-- th:field가 id속성과 name속성을 자동으로 생성해줌. -->
+        </div>
+        <div class="w3-section">
+          <label for="email">Email</label>
+          <input class="w3-input" style="width:100%;" type="text" required th:field = "*{email}"> <!-- th:field가 id속성과 name속성을 자동으로 생성해줌. -->
+        </div>
+        <div class="w3-section">
+          <label for="message">Message</label>
+          <input class="w3-input" style="width:100%;" type="text" required th:field="*{message}"> <!-- th:field가 id속성과 name속성을 자동으로 생성해줌. -->
+        </div>
+        <button type="submit" class="w3-button w3-teal w3-right">Modify</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-black w3-padding-16">
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+</body>
+</html>
