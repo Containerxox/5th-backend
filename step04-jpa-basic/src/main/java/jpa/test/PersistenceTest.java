@@ -1,15 +1,17 @@
 package jpa.test;
 
+import java.util.List;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import jpa.entity.Student;
 
 public class PersistenceTest {
 	public static void main(String[] args) {
 		// EMF
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("persistence"); // 공장 객체가 emf에 들어옴.
-		System.out.println(emf);
 		
 		// EM
 		EntityManager em = emf.createEntityManager();
@@ -21,11 +23,42 @@ public class PersistenceTest {
 		// insert
 		// 20241001, "DEV"
 		// 20241002, "DEVOPS"
+//		Student stu1 = new Student(20241001, "DEV");
+//		Student stu2 = new Student(20241002, "DEVOPS");
+//		em.persist(stu1);
+//		em.persist(stu2);
 		
-		tx.commit();
 		
 		// select
 		// sid로 검색 20241001
+//		Student foundStu1 = em.find(Student.class, 20241001);
+//		System.out.println(foundStu1);
+		
+		// selectAll (em 매니저는 findAll이란 메서드가 없음)
+		// ▷ JPQL (자바의 jpa에서 사용하는 객체지향 쿼리)를 사용해야 함
+		// SELECT * FROM student;  -> 이건 에러 발생함.
+		// SELECT s FROM Student s;  -> JPQL 적용 (엔티티 클래스 객체로 맵핑하기 때문에 대문자 Student를 적어줘야 함 / 반드시 별칭 적어줘야 함)
+		// 예시) SELECT s.sname FROM Student s; 
+//		List<String> names = em.createQuery("SELECT s.sname FROM Student s", String.class)
+//								.getResultList(); 
+		List<Student> students = em.createQuery("SELECT s FROM Student s", Student.class)
+									.getResultList(); 
+		
+		// SELECT * FROM student;
+//		students = em.createNativeQuery("SELECT * FROM student", Student.class)
+//					.getResultList();
+		
+		System.out.println(students);
+		
+		// JPQL을 굳이 사용해야 하느냐?
+		// mysql과 orcle db의 문법이 서로 다르다.
+		// createNativeQuery를 쓸 경우, 만약 사용하는 DB가 바뀌면 사용하는 DB에 맞춰서 쿼리를 변경해줘야 하는 번거로움 존재.
+		// createQuery()는 자동으로 맵핑하고 쿼리를 만들어주므로, 사용하는 DB가 바뀌더라도 변경할 부분이 없다. 
+		// 따라서 JPQL이 더 유용하다!
+		
+		// 하지만, JPQL은 복잡한 쿼리를 실행하는데에는 한계가 있다.
+		// DB의 고유한 함수를 사용하는 경우, 성능상의 튜닝하는 경우에는 createNativeQuery()가 더 낫다.
+		
 		
 		// update 
 		// DEVOPS 이름을 IT 변경
@@ -33,5 +66,6 @@ public class PersistenceTest {
 		// delete
 		// 20241002 학생 삭제
 		
+		tx.commit();
 	}
 }
