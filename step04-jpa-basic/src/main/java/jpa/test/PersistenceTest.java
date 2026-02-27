@@ -41,14 +41,14 @@ public class PersistenceTest {
 		// 예시) SELECT s.sname FROM Student s; 
 //		List<String> names = em.createQuery("SELECT s.sname FROM Student s", String.class)
 //								.getResultList(); 
-		List<Student> students = em.createQuery("SELECT s FROM Student s", Student.class)
-									.getResultList(); 
+//		List<Student> students = em.createQuery("SELECT s FROM Student s", Student.class)
+//									.getResultList(); 
 		
 		// SELECT * FROM student;
 //		students = em.createNativeQuery("SELECT * FROM student", Student.class)
 //					.getResultList();
 		
-		System.out.println(students);
+//		System.out.println(students);
 		
 		// JPQL을 굳이 사용해야 하느냐?
 		// mysql과 orcle db의 문법이 서로 다르다.
@@ -61,10 +61,24 @@ public class PersistenceTest {
 		
 		
 		// update 
-		// DEVOPS 이름을 IT 변경
+		// DEVOPS(20241001) 이름을 IT 변경
+		// 1) find -> 1차 캐시에 해당 객체에 대한 스냅샷 저장
+//		Student foundStu2 = em.find(Student.class, 20241002);
+//		System.out.println(foundStu2.getSname());
+		
+		// 2) 값을 변경
+//		foundStu2.setSname("IT");
+//		System.out.println(foundStu2.getSname());
+		
+		// 3) commit 시점에서 스냅샷과 현재 객체 상태와 비교 -> 변경사항 있다면 update 실행됨.
+		// => 이게 바로 '변경 감지(Dirty Checking)`이라는 특징!
+		
+		
 		
 		// delete
 		// 20241002 학생 삭제
+		Student foundStu2 = em.find(Student.class, 20241002);
+		em.remove(foundStu2); // 영속성 영역에서 해당 entity 객체를 삭제
 		
 		tx.commit();
 	}
