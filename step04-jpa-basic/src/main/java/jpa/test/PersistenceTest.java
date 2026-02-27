@@ -81,7 +81,7 @@ public class PersistenceTest {
 //		em.remove(foundStu2); // 영속성 영역에서 해당 entity 객체를 삭제
 		
 		
-		// 영속성 컨텍스트 (Persistence Context) 특징
+		// ▶ 영속성 컨텍스트 (Persistence Context) 특징
 		// ▷ 1차 캐시
 		Student cashedStu1 = em.find(Student.class, 20241001);
 		System.out.println(cashedStu1);
@@ -98,14 +98,20 @@ public class PersistenceTest {
 		// 여러가지 작업을 한번에 실행
 		// 20241003, 'CLOUD'
 		// 20241004, 'JPA'
-		// COMMIT이 없다고 가정
+		// COMMIT이 없다고 가정 -> 작업 X
 		
-		Student stu3 = new Student(20241003, "CLOUD");
-		Student stu4 = new Student(20241004, "JPA");
-		em.persist(stu3);
-		em.persist(stu4);
+//		Student stu3 = new Student(20241003, "CLOUD");
+//		Student stu4 = new Student(20241004, "JPA");
+//		em.persist(stu3);
+//		em.persist(stu4);
 		
-		// commit이 될 때, 위 2개에 대한 작업 내역이 실행됨!
+		// commit이 될 때, 위 2개에 대한 작업 내역(insert)이 실행됨!
+		
+		
+		
+		// ▷ 변경 감지
+		// 커밋하는 경우 DB에 결과를 바로 반영하지 않고 1차 캐시 영역의 결과와 비교하여 변경사항 발생시 DB 반영
+		
 		
 		
 		
