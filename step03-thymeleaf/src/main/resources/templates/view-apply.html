@@ -27,12 +27,12 @@
 	
 	<!-- 자바스크립트 인라인  --> 
 	<script th:inline="javascript">
-		let sid = /*[[${thyme.sid}]]*/'20246001'; <!-- /**/내부는 서버가 존재하면, 렌더링되서 사용되고, ''내부는 서버가 없을 경우에 사용되는 (기본)값  --> 
+		let sid = /*[[${thyme.sid}]]*/'20246001'; // /**/ 내부는 서버가 존재하면, 렌더링되서 사용되고, ''내부는 서버가 없을 경우에 사용되는 (기본)값 
 		console.log(sid);
 		
 		const viewBasicBtn = document.getElementById("view-basic-btn");
 		viewBasicBtn.addEventListener('click', (e) => {
-			<!-- location.href='/view-basic'; --> 
+			// location.href='/view-basic'; 
 			location.href=/*[[@{/view-basic}]]*/'/view-basic';
 		});
 	</script>
