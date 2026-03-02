@@ -28,7 +28,6 @@ public class PersistenceTest {
 //		em.persist(stu1);
 //		em.persist(stu2);
 		
-		
 		// select
 		// sid로 검색 20241001
 //		Student foundStu1 = em.find(Student.class, 20241001);
@@ -41,8 +40,8 @@ public class PersistenceTest {
 		// 예시) SELECT s.sname FROM Student s; 
 //		List<String> names = em.createQuery("SELECT s.sname FROM Student s", String.class)
 //								.getResultList(); 
-//		List<Student> students = em.createQuery("SELECT s FROM Student s", Student.class)
-//									.getResultList(); 
+		List<Student> students = em.createQuery("SELECT s FROM Student s", Student.class)
+									.getResultList(); 
 		
 		// SELECT * FROM student;
 //		students = em.createNativeQuery("SELECT * FROM student", Student.class)
@@ -62,7 +61,7 @@ public class PersistenceTest {
 		
 		// update 
 		// DEVOPS(20241001) 이름을 IT 변경
-		// 1) find -> 1차 캐시에 해당 객체에 대한 스냅샷 저장
+//		 1) find -> 1차 캐시에 해당 객체에 대한 스냅샷 저장
 //		Student foundStu2 = em.find(Student.class, 20241002);
 //		System.out.println(foundStu2.getSname());
 		
@@ -83,11 +82,11 @@ public class PersistenceTest {
 		
 		// ▶ 영속성 컨텍스트 (Persistence Context) 특징
 		// ▷ 1차 캐시
-		Student cashedStu1 = em.find(Student.class, 20241001);
-		System.out.println(cashedStu1);
-		
-		Student cashedStu2 = em.find(Student.class, 20241001);
-		System.out.println(cashedStu2);
+//		Student cashedStu1 = em.find(Student.class, 20241001);
+//		System.out.println(cashedStu1);
+//		
+//		Student cashedStu2 = em.find(Student.class, 20241001);
+//		System.out.println(cashedStu2);
 		// 같은 쿼리를 여러번 요청하는 경우
 		// context에 해당 정보를 담아두기 때문에
 		// DB로 다시 갈 필요 없이 context에서 뽑아옴

@@ -24,7 +24,7 @@ public class Student {
 	
 //	@Column(columnDefinition = "VARCHAR(30) DEFAULT 'SNAME'", insertable = false, updatable=false) //컬럼의 옵션값을 직접 설정하고 싶다면 columnDefinition 사용
 //	@Column(name="sname", nullable = false, length=10) // 옵션 추가(not null) & 10글자만 들어갈수있게 설정
-	@Column(name="sname")
+	@Column(name="name")
 	private String sname;
 	
 	
