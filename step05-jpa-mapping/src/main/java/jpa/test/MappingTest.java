@@ -1,5 +1,8 @@
 package jpa.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -42,17 +45,39 @@ public class MappingTest {
 //		stu.setSname("jpa");
 //		em.persist(stu);
 		
-		Lecture foundLecture = em.find(Student.class, 20242001).getLecture();
-		System.out.println(foundLecture);
+//		Lecture foundLecture = em.find(Student.class, 20242001).getLecture();
+//		System.out.println(foundLecture);
 		
 		
+		// 강좌에 참여하고 있는 학생의 정보 출력?  // 양방향 참조 
+//		List<Student> students = em.find(Lecture.class, 1L).getStudents();
+//		System.out.println(students);
 		
 		
+		// SQL: SELECT * FROM student WHERE lid=?;
+		// JPQL로 바꿔보자.
+		// 1) 이름 기반 파라미터 JPQL (권장)(가독성 높음)
+		// :변수명 -> setParameter("변수명", 값);
+//		String namedJpql = "select s from Student s where s.lecture.lid = :lid";
+//		List<Student> students = em.createQuery(namedJpql, Student.class)
+//									.setParameter("lid", 1L)
+//									.getResultList();
+////		
+////		System.out.println(students);
+		
+		// 2) 위치 기반 파라미터 JPQL
+//		String PositionalJpql = "select s from Student s where s.lecture.lid = ?1";
+//		students = em.createQuery(PositionalJpql, Student.class)
+//					.setParameter(1, 1L)
+//					.getResultList();
+//		
+////		System.out.println(students);
+		
+// ==========위는 Student와 Lecture를 가지고 한 실습 (양방향 참조) =====================================================
+// ====================================================================
+// ============== 아래는 Custormer와 Product를 가지고 한 실습 (다대다) ============================================
 		
 		
-		
-		
-		// 강좌에 참여하고 있는 학생의 정보 출력?
 			
 	}
 	
