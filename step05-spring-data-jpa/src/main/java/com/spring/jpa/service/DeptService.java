@@ -1,5 +1,7 @@
 package com.spring.jpa.service;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.stereotype.Service;
 
 import com.spring.jpa.entity.Dept;
@@ -21,6 +23,13 @@ public class DeptService { // Service는 "비즈니스 로직 처리" + "트랜�
 		// ▷ save
 		Dept newDept = new Dept(99, "JPA", "SEOUL");
 //		result = deptRepository.save(newDept);
+		
+		// ▷ findById
+//		result = deptRepository.findById(99)
+//								.orElseThrow(() ->  new NoSuchElementException("해당 부서 없음")); //존재하지 않으면 에러를 던짐
+		
+		// ▷ findAll
+		result = deptRepository.findAll(); // List 타입으로 리턴함.
 		
 		return result;
 	}
