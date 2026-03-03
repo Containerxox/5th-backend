@@ -3,6 +3,8 @@ package com.spring.api.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +21,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(exclude= {"students"})
 @Entity
 public class Lecture {
 		@Id
@@ -29,8 +31,9 @@ public class Lecture {
 		
 		@Column(name = "lname")
 		private String lname;
-		
+		 
 		@OneToMany(mappedBy = "lecture")
+		@JsonIgnore
 		private List<Student> students = new ArrayList<>();
 		
 }
