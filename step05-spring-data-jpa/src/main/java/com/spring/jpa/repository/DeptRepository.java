@@ -40,7 +40,7 @@ public interface DeptRepository extends JpaRepository<Dept, Integer>{ // Entity 
 	@Query("SELECT d.dname FROM Dept d")
 	List<String> findAllDnames(); // 내가 직접 만든 메서드!
 	
-	@Query("SELECT d.deptno FROM Dept d WEHRE d.loc = :loc")
-	List<Integer> findAllDeptnoByLoc(@Param("loc") String loc); 
+	@Query("SELECT d.deptno FROM Dept d WHERE d.loc = :loc")
+	List<Integer> findAllDeptnoByLoc(@Param("loc") String loc);
 	
 }
