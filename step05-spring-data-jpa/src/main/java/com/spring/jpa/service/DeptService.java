@@ -1,7 +1,12 @@
 package com.spring.jpa.service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 import com.spring.jpa.entity.Dept;
@@ -40,7 +45,53 @@ public class DeptService { // Service는 "비즈니스 로직 처리" + "트랜�
 		
 			
 		// ▷ delete
-		deptRepository.deleteById(99);
+//		deptRepository.deleteById(99);
+		
+		
+		// ▶ 쿼리 메소드
+		// loc으로 find하기
+//		result = deptRepository.findByLoc("BOSTON");
+		
+		// find : loc
+//		result = deptRepository.findTop1ByLoc("BOSTON");
+		
+		// find : dname or loc
+//		result = deptRepository.findByDnameOrLoc("ACCOUNTING", "BOSTON");
+		
+		// find : deptno 10 between 30
+//		result = deptRepository.findByDeptnoBetween(10,30);
+		
+		// find : dname LIKE 'O' -> '%O%'
+//		result = deptRepository.findByDnameLike("O");
+//		result = deptRepository.findByDnameContains("O");		
+
+		
+		// find : dname LIKE '%O%'  ->   Order By Deptno desc;
+//		result = deptRepository.findByDnameContainsOrderByDeptnoDesc("O");	
+		
+		
+		// Sort 객체 이용하여
+		// find : dname LIKE '%O%'  ->   Order By Deptno desc;
+//		result = deptRepository.findByDnameContains("O", Sort.by(Order.desc("deptno")));	
+		
+		// Page 객체 이용
+		// find : dname LIKE '%A%'  ->  1페이지당 2개씩 출력
+//		result = deptRepository.findByDnameContains("A", PageRequest.of(0,2));	
+		
+		
+		// find : deptno IN (20, 30) 
+//		List<Integer> deptnos = Arrays.asList(20,30);
+//		result = deptRepository.findByDeptnoIn(deptnos);
+		
+		// find : only dnames  (dname만 출력해주고 싶어) => JPQL 사용하자.
+		result = deptRepository.findAllDnames();
+		
+		
+		// delete : deleteByLoc(String loc);
+		// delete : 50 이상 부서는 삭제 : deleteByDeptnoGreaterThan(Integer deptno);
+		
+		
+		
 		
 		return result;
 	}
