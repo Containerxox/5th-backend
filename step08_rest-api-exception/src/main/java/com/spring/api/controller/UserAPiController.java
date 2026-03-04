@@ -16,10 +16,10 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-public class BizAPIController {
+public class UserAPiController {
 	private final BizService bizService;
 	
-	@GetMapping(value = "/api/biz", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/user/api", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String bizAPIMethod() {
 		
 		String result = null;
@@ -28,7 +28,7 @@ public class BizAPIController {
 		return result;
 	}
 	
-	@GetMapping(value = "/api/biz2", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/user/api2", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String bizAPIMethod2() {
 		
 		String result = null;
@@ -37,7 +37,7 @@ public class BizAPIController {
 		return result;
 	}
 	
-	@GetMapping(value = "/api/biz3", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/user/api3", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String bizAPIMethod3() {
 		
 		String result = null;
