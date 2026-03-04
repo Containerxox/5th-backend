@@ -2,8 +2,12 @@ package com.spring.api.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.api.dto.ApiResponseDto;
@@ -42,7 +46,63 @@ public class StudentController {
 		}
 		
 		return new ResponseEntity<>(apiResponseDto, apiResponseDto.getHttpStatus());
+	
 	}
+	
+	@PostMapping(value="/students")
+	public ResponseEntity<ApiResponseDto> insertStudent(@RequestBody Student student){
+		
+		ApiResponseDto apiResponseDto = new ApiResponseDto<>();
+		
+		studentService.insertStudent(student);
+		
+		apiResponseDto = ApiResponseDto.builder()
+										.statusCode(HttpStatus.CREATED.value())
+										.httpStatus(HttpStatus.CREATED)
+										.message("학생 생성 성공")
+										.data(student)
+										.build();
+		
+		return new ResponseEntity<>(apiResponseDto, apiResponseDto.getHttpStatus());
+		
+	}
+	
+	@PutMapping(value="/students/{sid}")
+	public ResponseEntity<ApiResponseDto> updateStudent(@PathVariable Integer sid,@RequestBody Student student){
+		
+		ApiResponseDto apiResponseDto = new ApiResponseDto<>();
+		
+		studentService.updateStudent(sid, student);
+		
+		apiResponseDto = ApiResponseDto.builder()
+										.statusCode(HttpStatus.OK.value())
+										.httpStatus(HttpStatus.OK)
+										.message("학생 수정 성공")
+										.data(student)
+										.build();
+		
+		return new ResponseEntity<>(apiResponseDto, apiResponseDto.getHttpStatus());
+		
+	}
+	
+	@DeleteMapping(value="/students/{sid}")
+	public ResponseEntity<ApiResponseDto> deleteStudent(@PathVariable Integer sid){
+		
+		ApiResponseDto apiResponseDto = new ApiResponseDto<>();
+		
+		studentService.deleteStudent(sid);
+		
+		apiResponseDto = ApiResponseDto.builder()
+										.statusCode(HttpStatus.NO_CONTENT.value())
+										.httpStatus(HttpStatus.NO_CONTENT)
+										.message("학생 삭제 성공")
+										.build();
+		
+		return new ResponseEntity<>(apiResponseDto, apiResponseDto.getHttpStatus());
+		
+	}
+	
+	
 	
 	
 	
