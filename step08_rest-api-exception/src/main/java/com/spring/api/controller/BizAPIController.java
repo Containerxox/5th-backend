@@ -53,7 +53,7 @@ public class BizAPIController {
 					.body(ErrorResponse.of("BAD_REQEUST", e.getMessage()));
 	}
 	
-	@ExceptionHandler({NoSuchElementException.class})
+	@ExceptionHandler({NoSuchElementException.class}) //에러 나열 가능
 	public ResponseEntity<ErrorResponse> NoSuchElementException(NoSuchElementException e) {
 		return ResponseEntity
 					.status(HttpStatus.NOT_FOUND)
