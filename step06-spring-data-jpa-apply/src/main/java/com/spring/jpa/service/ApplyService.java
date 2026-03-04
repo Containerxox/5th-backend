@@ -88,6 +88,15 @@ public class ApplyService {
 		 * 
 		 * N + 1 해결 주요 목적?
 		 * => 쿼리를 최소화
+		 * 
+		 * 
+		 * 만약 강좌 25개, batchSize = 10
+		 * 발생하는 쿼리는 ? 
+		 * 1: select * from lecture
+		 * 2: where lid In (1,2,3,4,5,6,7,8,9,10)
+		 * 3: where lid In (11,12,13,14,15,16,17,18,19,20)
+		 * 3: where lid In (21,22,23,24,25)
+		 * 
 		 */
 		
 		
