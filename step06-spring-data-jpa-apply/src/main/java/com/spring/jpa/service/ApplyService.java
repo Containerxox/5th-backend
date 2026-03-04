@@ -72,8 +72,23 @@ public class ApplyService {
 		// 1), 2) 페이지 처리가 불가능 ↓ 해결 방안 
 		// 3) @BatchSize 사용하기 (Lecture.java -> students 필드에 해당 어노테이션 적어주기) + FetchType.EAGER
 		result = lectureRepository.findAll();
+		// => Hibernate가 한 번에 여러 lecture의 student를 가져온다.
+		// Hibernate가 lecture.getStudents() 접근
+		// lecture 여러 개의 ID를 모아서 IN 쿼리로 students 조회
+		// 즉, select * from student where lid in (?, ?, ?, ...)
 		
 		
+		/*
+		 * 페이징 필요?
+		 * 		yes -> @BatchSize
+		 * 		no  -> 데이터 규모?
+		 * 					소규모, 단순   -> fetch join
+		 * 						대규모    -> @BatchSize
+		 * 						동적 처리  -> EntityGraph
+		 * 
+		 * N + 1 해결 주요 목적?
+		 * => 쿼리를 최소화
+		 */
 		
 		
 
