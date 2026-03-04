@@ -19,8 +19,11 @@ public class StudentService {
 	public Student getStudent(Integer sid) {
 		
 		
+//		return studentRepository.findById(sid)
+//								.orElseThrow(() -> new NoSuchElementException("학생 존재 X"));
+		
 		return studentRepository.findById(sid)
-								.orElseThrow(() -> new NoSuchElementException("학생 존재 X"));
+								.orElse(null);
 		
 	}
 	
