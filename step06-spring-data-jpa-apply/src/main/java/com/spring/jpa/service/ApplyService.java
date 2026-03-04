@@ -141,12 +141,21 @@ public class ApplyService {
 		lecture.getStudents().add(stu2);
 		
 		
+		// ▷ 고아 객체 (부모와 연관관계가 끊어진 엔터티)
+		// orphanRemoval=true   => 연결이 끊긴 객체(고아 객체)는 삭제를 함.
+		lecture.getStudents().remove(0); // -> lecture와 연결이 끊김 -> stu1가 고아 객체가 된다.
+		
+		
+		
 //		lectureRepository.save(lecture);  // API라는 강좌명만 insert 쿼리 실행됨.
 		
-		// ▶ cascade로 stu1, stu2도 함께 저장하고 싶어!
+		// ▶ 영속성 전이 CASCADE
+		//  cascade로 stu1, stu2도 함께 저장하고 싶어!
 		// cascade=CascadeType.PERSIST
 		// cascade=CascadeType.ALL (저장, 삭제, 병합 한번에 처리됨) (위험)
 		lectureRepository.save(lecture); 
+		
+		
 		
 		
 		return null;

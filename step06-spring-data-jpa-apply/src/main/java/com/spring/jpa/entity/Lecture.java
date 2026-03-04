@@ -38,7 +38,7 @@ public class Lecture {
 	@Column(name = "lname")
 	private String lname;
 	
-	@OneToMany(mappedBy = "lecture", fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
+	@OneToMany(mappedBy = "lecture", fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, orphanRemoval=true)
 	@BatchSize(size=10)
 	private List<Student> students = new ArrayList<>();
 	
