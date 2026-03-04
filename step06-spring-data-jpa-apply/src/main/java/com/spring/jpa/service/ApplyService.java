@@ -66,7 +66,17 @@ public class ApplyService {
 		
 		
 		// 2) Entity Graph
-		result = lectureRepository.findAllWithEntityGraph();
+//		result = lectureRepository.findAllWithEntityGraph();
+		
+		
+		// 1), 2) 페이지 처리가 불가능 ↓ 해결 방안 
+		// 3) @BatchSize 사용하기 (Lecture.java -> students 필드에 해당 어노테이션 적어주기) + FetchType.EAGER
+		result = lectureRepository.findAll();
+		
+		
+		
+		
+
 		
 		
 		

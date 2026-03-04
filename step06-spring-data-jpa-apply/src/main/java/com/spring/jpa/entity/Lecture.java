@@ -3,6 +3,9 @@ package com.spring.jpa.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
+import org.springframework.boot.autoconfigure.batch.BatchDataSource;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -34,7 +37,8 @@ public class Lecture {
 	@Column(name = "lname")
 	private String lname;
 	
-	@OneToMany(mappedBy = "lecture")
+	@OneToMany(mappedBy = "lecture", fetch=FetchType.EAGER)
+	@BatchSize(size=10)
 	private List<Student> students = new ArrayList<>();
 	
 }
