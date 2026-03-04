@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.spring.api.dto.ErrorResponse;
 
-// 전역 예외 핸들러 
+// ▶ 전역 예외 핸들러 
 
 @RestControllerAdvice  // REST API용 (= @ControllerAdvice + @ResponseBody)
 public class GlobalExceptionHandler {
