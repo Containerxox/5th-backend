@@ -59,9 +59,9 @@ public class ApplyService {
 		// ▷ N+1 해결 방안
 		// 1) fetch join (이너 조인) 
 //		result = lectureRepository.findAllWithFetchJoin();
-		// 페치조인은 기본값이 학생이 존재하는 강좌만 불러온다.
+		// 페치조인(이너조인)은 학생이 있는 강의만 조회되고, 학생이 없는 강의는 결과에서 사라짐.
 		// 학생이 존재하지 않는 강좌라면, null이 되버린다. 따라서 outer 조인을 해줘야 겠지 
-		// fetch join (외부 조인)
+		// fetch join (외부 조인) -> 학생이 없어도 강좌 조회되도록 함!
 		result = lectureRepository.findAllWithOuterFetchJoin();
 		
 		
