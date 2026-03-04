@@ -39,6 +39,11 @@ public class ApplyService {
 		 */
 
 		// ▶ N + 1 해결
+		// JPA에서 연관된 엔티티를 조회할 때 쿼리가 불필요하게 여러 번 실행되는 성능 문제
+		// 한 번의 조회 쿼리(1번)로 N개의 엔티티를 가져온 후,
+		// 각 엔티티의 연관 데이터를 조회하기 위해 추가로 N번의 쿼리가 실행되는 현상
+		// 총 실행 쿼리 = 1 + N
+		
 		// ▷ @OneToMany(mappedBy = "lecture", fetch=FetchType.EAGER)
 		// select lecture -> select student ==> join  (N+1을 해결하는 궁극적인 방법은 아님) (하나를 가져오는건 해결되지만, 여러개를 가져오면 N+1이 발생함)
 //		result = lectureRepository.findById(1L);
@@ -55,7 +60,8 @@ public class ApplyService {
 		// 1) fetch join (이너 조인) 
 //		result = lectureRepository.findAllWithFetchJoin();
 		// 페치조인은 기본값이 학생이 존재하는 강좌만 불러온다.
-		// 학생이 존재하지 않는 강좌라면, null이 되버린다. 따라서 outer 조인을 해줘야 겠지
+		// 학생이 존재하지 않는 강좌라면, null이 되버린다. 따라서 outer 조인을 해줘야 겠지 
+		// fetch join (외부 조인)
 		result = lectureRepository.findAllWithOuterFetchJoin();
 		
 		
