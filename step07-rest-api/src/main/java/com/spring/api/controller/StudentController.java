@@ -93,8 +93,8 @@ public class StudentController {
 		studentService.deleteStudent(sid);
 		
 		apiResponseDto = ApiResponseDto.builder()
-										.statusCode(HttpStatus.NO_CONTENT.value())
-										.httpStatus(HttpStatus.NO_CONTENT)
+										.statusCode(HttpStatus.OK.value())
+										.httpStatus(HttpStatus.OK)
 										.message("학생 삭제 성공")
 										.build();
 		
