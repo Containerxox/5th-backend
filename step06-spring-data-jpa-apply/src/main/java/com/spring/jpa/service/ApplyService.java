@@ -99,6 +99,11 @@ public class ApplyService {
 		 * 
 		 */
 		
+		// ▶ OSIV
+		// spring.jpa.open-in-view= 
+		// true: 영속성 컨텍스트 controller까지 유지
+		// false: controller 에서는 영속성 컨텍스트 없음 (Service까지만 영속성 컨텍스트 유지)
+		
 		
 
 		
