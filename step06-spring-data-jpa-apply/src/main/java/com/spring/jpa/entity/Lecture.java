@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.batch.BatchDataSource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,7 +38,7 @@ public class Lecture {
 	@Column(name = "lname")
 	private String lname;
 	
-	@OneToMany(mappedBy = "lecture", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy = "lecture", fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
 	@BatchSize(size=10)
 	private List<Student> students = new ArrayList<>();
 	

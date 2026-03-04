@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.spring.jpa.entity.Lecture;
+import com.spring.jpa.entity.Student;
 import com.spring.jpa.repository.LectureRepository;
 import com.spring.jpa.repository.StudentRepository;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.transaction.Transactional;
@@ -122,21 +124,30 @@ public class ApplyService {
 	@Transactional
 	public Object cascadeApply() {
 		
-//		Lecture lecture = new Lecture();
-//		lecture.setLname("API");
-//
-//		Student stu1 = new Student();
-//		stu1.setSid(20244001);
-//		stu1.setSname("REST");
-//		stu1.setLecture(lecture);	
-//	
-//		Student stu2 = new Student();
-//		stu2.setSid(20244002);
-//		stu2.setSname("API");
-//		stu2.setLecture(lecture);
-//		
-//		lecture.getStudents().add(stu1);
-//		lecture.getStudents().add(stu2);
+		Lecture lecture = new Lecture();
+		lecture.setLname("API");
+
+		Student stu1 = new Student();
+		stu1.setSid(20244001);
+		stu1.setSname("REST");
+		stu1.setLecture(lecture);	
+	
+		Student stu2 = new Student();
+		stu2.setSid(20244002);
+		stu2.setSname("API");
+		stu2.setLecture(lecture);
+		
+		lecture.getStudents().add(stu1);
+		lecture.getStudents().add(stu2);
+		
+		
+//		lectureRepository.save(lecture);  // API라는 강좌명만 insert 쿼리 실행됨.
+		
+		// ▶ cascade로 stu1, stu2도 함께 저장하고 싶어!
+		// cascade=CascadeType.PERSIST
+		// cascade=CascadeType.ALL (저장, 삭제, 병합 한번에 처리됨) (위험)
+		lectureRepository.save(lecture); 
+		
 		
 		return null;
 	}
