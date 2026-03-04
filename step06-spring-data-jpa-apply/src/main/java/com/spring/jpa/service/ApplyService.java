@@ -155,6 +155,13 @@ public class ApplyService {
 		// cascade=CascadeType.ALL (저장, 삭제, 병합 한번에 처리됨) (위험)
 		lectureRepository.save(lecture); 
 		
+		// REMOVE	: 엔티티를 제거 -> 연관 엔티티도 제거
+		// 학생1이 강의1을 듣고 있었는데, 학생1이 강의를 이제 안들어서 빠졌어.
+		// 그럴때 REMOVE를 쓸 경우, 아직 강의1을 듣는 다른 학생들이 있는데도
+		// 강의1이 삭제됨.
+		// 자식(student)이 삭제되는데 부모(lecture)를 삭제한다? 이런 로직은 정말 드물다. 일반적으로는 사용 안함.
+		// 부모가 삭제되면 자식이 삭제된다. => 일반적 로직
+		
 		
 		
 		
