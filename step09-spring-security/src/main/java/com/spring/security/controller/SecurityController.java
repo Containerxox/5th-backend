@@ -54,8 +54,9 @@ public class SecurityController {
 	// 실제 회원가입 -> 회원가입 후 index page로 이동
     @PostMapping("/signup")
     public String signup(SignUpRequestDto dto) {
-    	userService.signUp(dto);
-    	return "redirect:/login";
+    	userService.signUp(dto); // 회원가입 처리
+    	
+    	return "redirect:/login"; // 가입 완료 후 /login 페이지로 리다이렉트
     }
     
 }

@@ -21,10 +21,10 @@ public class PrincipalDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-		User user = userRepository.findByUsername(username);
+		User user = userRepository.findByUsername(username);  //DB에서 user를 조회 
 		
 		if(user != null) {
-			return new PrincipalDetails(user);
+			return new PrincipalDetails(user); // 조회된 user로 PrincipalDetails(UserDetails 구현체)를 만들어 반환
 		}
 		
 		return null;

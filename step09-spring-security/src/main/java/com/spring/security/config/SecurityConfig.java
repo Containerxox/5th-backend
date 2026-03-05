@@ -21,9 +21,9 @@ public class SecurityConfig {
 		http
 			.formLogin(form -> 
 								form
-									.loginPage("/login")
-									.loginProcessingUrl("/login")
-									.defaultSuccessUrl("/"));
+									.loginPage("/login") // GET요청은 /login (뷰) 을 사용
+									.loginProcessingUrl("/login") //POST요청은 컨트롤러가 아닌 Spring Security 필터가 가로챔 -> Security 내부에서 UserDetailsService.loadUserByusername(useranme) 호출
+									.defaultSuccessUrl("/")); // 로그인 성공 시, /로 이동.
 		
 		return http.build();
 	}

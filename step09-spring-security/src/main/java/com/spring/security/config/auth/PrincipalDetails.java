@@ -19,18 +19,21 @@ public class PrincipalDetails implements UserDetails {
 	
 	private final User user;
 
+	// 로그인한 사용자의 "권한(Authority) (ROLE)"을 가져오는 메서드
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(() -> user.getRole());
-		return authorities;
+		return authorities; // 사용자의 권한(role) 반환
 	}
 
+	// // DB에 저장된 password 반환 
 	@Override
 	public String getPassword() {
 		return user.getPassword();
 	}
 
+	// 로그인한 사용자의 username 반환
 	@Override
 	public String getUsername() {
 		return user.getUsername();

@@ -27,14 +27,14 @@ public class UserService {
 //    	System.out.println("암호화 x : " + dto.getPassword());
 //    	System.out.println("암호화 o : " + passwordEncoder.encode(dto.getPassword()));
     	
-    	// dto -> entity
+    	// dto -> entity 변환
     	User user = User.builder()
     					.username(dto.getUsername())
     					.email(dto.getEmail())
-    					.password(passwordEncoder.encode(dto.getPassword()))
+    					.password(passwordEncoder.encode(dto.getPassword())) // PW를 암호화
     					.role("ROLE_USER")
     					.build();
     	
-        userRepository.save(user);
+        userRepository.save(user); // DB에 저장
     }
 }
