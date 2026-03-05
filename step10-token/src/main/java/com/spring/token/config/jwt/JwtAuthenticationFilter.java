@@ -13,6 +13,7 @@ import com.spring.token.dto.LoginRequestDto;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -41,12 +42,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
+    	
+    	System.out.println("---");
 
         ObjectMapper om = new ObjectMapper();
-        LoginRequestDto LoginRequestDto = null;
+        LoginRequestDto loginRequestDto = null;
 
         // JSON body 파싱 → LoginRequestDto
-        
+        try(ServletInputStream is = request.getInputStream()){
+        	loginRequestDto = om.readValue(is,LoginRequestDto.class); //LoginRequestDto로 변환(파싱)
+        	System.out.println(loginRequestDto);
+        	
+        	
+        }catch (IOException e){
+        	e.printStackTrace();
+        }
 
         // UsernamePasswordAuthenticationToken 생성 (미인증 상태)
         
