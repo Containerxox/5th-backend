@@ -3,6 +3,7 @@ package com.spring.token.config.jwt;
 import java.io.IOException;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -43,8 +44,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
     	
-    	System.out.println("---");
-
         ObjectMapper om = new ObjectMapper();
         LoginRequestDto loginRequestDto = null;
 
@@ -59,11 +58,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
 
         // UsernamePasswordAuthenticationToken 생성 (미인증 상태)
+        UsernamePasswordAuthenticationToken authenticationToken = 
+        		new UsernamePasswordAuthenticationToken(
+        				loginRequestDto.getUsername(),
+        				loginRequestDto.getPassword()
+        		);
         
 
         // AuthenticationManager가 PrincipalDetailsService를 통해 DB 조회 + 비밀번호 검증
-        // 성공 시 Authentication 반환, 실패 시 AuthenticationException 발생
-        return null;
+        // 성공 시 Authentication 객체 반환, 실패 시 AuthenticationException 발생
+        return authenticationManager.authenticate(authenticationToken);
     }
 
     /**
@@ -83,6 +87,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // JwtUtil로 토큰 생성 (roles 포함)
         String accessToken  = JwtUtil.generateAccessToken(principalDetails);
+//        System.out.println("----");
+//        System.out.println(accessToken);
         String refreshToken = JwtUtil.generateRefreshToken(principalDetails);
 
         // httpOnly Cookie로 저장

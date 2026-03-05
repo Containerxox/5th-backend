@@ -2,7 +2,7 @@ package com.spring.token.config.jwt;
 
 public interface JwtProperties {
 
-    String SECRET = ""; //
+    String SECRET = "a-string-secret-at-least-256-bits-long"; //
 
     // Access Token: 1시간
     int ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60;

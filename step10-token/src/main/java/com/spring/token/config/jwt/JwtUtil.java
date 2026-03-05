@@ -1,7 +1,10 @@
 package com.spring.token.config.jwt;
 
+import java.util.Date;
 import java.util.List;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.spring.token.config.auth.PrincipalDetails;
 
@@ -16,7 +19,18 @@ public class JwtUtil {
      * claim: uid, uname, roles (권한 포함)
      */
     public static String generateAccessToken(PrincipalDetails principalDetails) {
-        return null;
+    	
+    	List<String> roles = principalDetails.getAuthorities()
+    											.stream()
+    											.map(auth->auth.getAuthority())
+    											.toList();
+		return JWT.create()
+		    		.withSubject(principalDetails.getUsername())
+		    		.withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME))
+		    		.withClaim("uid", principalDetails.getUsers().getId())
+		    		.withClaim("uname",principalDetails.getUsers().getUsername())
+		    		.withClaim("roles", roles)
+		    		.sign(Algorithm.HMAC256(JwtProperties.SECRET));
     }
 
     /**
