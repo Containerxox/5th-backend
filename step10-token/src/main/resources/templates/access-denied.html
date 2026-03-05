@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>접근 거부</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f2f5; }
+        .box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 360px; text-align: center; }
+        h2 { color: #f44336; }
+        .btn { display: inline-block; padding: 10px 24px; background: #2196F3; color: white; border-radius: 4px; text-decoration: none; margin-top: 16px; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>🚫 접근 거부</h2>
+    <p>해당 페이지에 접근할 권한이 없습니다.</p>
+    <p>
+        현재 권한:
+        <span th:each="auth : ${#authentication.authorities}" sec:authorize="isAuthenticated()">
+            <b th:text="${auth.authority}"></b>
+        </span>
+        <span sec:authorize="isAnonymous()">로그인 필요</span>
+    </p>
+    <a th:href="@{/index}" class="btn">홈으로 돌아가기</a>
+</div>
+</body>
+</html>

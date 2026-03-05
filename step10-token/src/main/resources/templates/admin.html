@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Page</title>
+    <style>
+        body { font-family: sans-serif; max-width: 760px; margin: 60px auto; padding: 20px; }
+        .card { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 24px; margin: 12px 0; }
+        .btn { padding: 8px 16px; border-radius: 4px; color: white; border: none; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; margin: 4px; }
+        .btn-red  { background: #f44336; }
+        .btn-blue { background: #2196F3; }
+        .btn-gray { background: #9E9E9E; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 14px; }
+        th { background: #f5f5f5; }
+        input.role-input { width: 220px; padding: 5px; border: 1px solid #ddd; border-radius: 4px; }
+        .badge { background: #fce4ec; color: #c62828; padding: 3px 10px; border-radius: 12px; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <h1>🛡️ Admin Page</h1>
+    <p>✅ ROLE_ADMIN만 접근 가능</p>
+
+    <div class="card">
+        <p>관리자: <b><span sec:authentication="name"></span></b></p>
+    </div>
+
+    <div class="card">
+        <h3>전체 사용자 관리</h3>
+
+        <!--
+            Thymeleaf 서버 렌더링 테이블
+            PageController → Model에 userList 담아서 전달
+            th:each로 반복 렌더링
+            → 페이지 로드 시 바로 테이블 표시 (JS fetch 불필요)
+        -->
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Username</th><th>현재 권한</th><th>권한 변경</th></tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${userList}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td>
+                        <span class="badge" th:text="${user.roles}"></span>
+                    </td>
+                    <td>
+                        <!--
+                            th:id, th:value로 동적 id/value 바인딩
+                            JS updateRole()에서 input 값 읽어서 PUT API 호출
+                        -->
+                        <input class="role-input"
+                               th:id="'role-' + ${user.id}"
+                               th:value="${user.roles}"
+                               placeholder="ROLE_USER,ROLE_MANAGER" />
+                        <button class="btn btn-blue"
+                                th:onclick="'updateRole(' + ${user.id} + ')'">변경</button>
+                    </td>
+                </tr>
+                <!-- userList가 비어있을 때 -->
+                <tr th:if="${#lists.isEmpty(userList)}">
+                    <td colspan="4" style="text-align:center">사용자가 없습니다</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br>
+        <button class="btn btn-gray" onclick="window.location.reload()">목록 새로고침</button>
+    </div>
+
+    <br>
+    <button class="btn btn-red" onclick="logout()">로그아웃</button>
+    <a th:href="@{/index}" class="btn btn-gray">← 홈으로</a>
+
+<script>
+    /**
+     * 권한 변경
+     * PUT /api/v1/admin/users/{id}/roles
+     *
+     * 변경 후 window.location.reload() → Thymeleaf 서버 재렌더링
+     * → 변경된 권한이 테이블에 즉시 반영
+     */
+    async function updateRole(id) {
+        const roles = document.getElementById(`role-${id}`).value.trim();
+        if (!roles) {
+            alert('권한을 입력하세요 (예: ROLE_USER 또는 ROLE_USER,ROLE_MANAGER)');
+            return;
+        }
+
+        const response = await fetch(`/api/v1/admin/users/${id}/roles`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ roles })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            alert(data.message);
+            window.location.reload();  // 서버 재렌더링으로 최신 데이터 반영
+        } else {
+            alert('권한 변경 실패');
+        }
+    }
+
+    async function logout() {
+        await fetch('/api/v1/auth/logout', { method: 'POST', credentials: 'include' });
+        window.location.href = '/login';
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 60px auto; padding: 20px; }
+        .card { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 24px; margin: 12px 0; }
+        .btn { display: inline-block; padding: 10px 20px; margin: 6px 4px; border-radius: 4px;
+               text-decoration: none; color: white; cursor: pointer; border: none; font-size: 14px; }
+        .btn-green  { background: #4CAF50; }
+        .btn-blue   { background: #2196F3; }
+        .btn-orange { background: #FF9800; }
+        .btn-red    { background: #f44336; }
+        .info { color: #555; font-size: 14px; margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+    <h1>🏠 Index Page</h1>
+
+    <div class="card">
+
+        <!--
+            sec:authorize → Spring Security 권한 기반 렌더링
+            thymeleaf-extras-springsecurity6 의존성 필요
+
+            isAnonymous()  → 미로그인 사용자
+            isAuthenticated() → 로그인 사용자
+            hasRole('ADMIN') → 특정 권한 보유자
+
+            ※ 이 렌더링은 서버에서 처리 (SecurityContext 기반)
+              토큰이 유효하면 JwtAuthorizationFilter가 SecurityContext에 Authentication 저장
+              → Thymeleaf sec: 태그가 이를 참조하여 렌더링
+        -->
+
+        <!-- 미로그인 상태 -->
+        <div sec:authorize="isAnonymous()">
+            <p>로그인이 필요합니다.</p>
+            <a th:href="@{/login}"  class="btn btn-green">로그인</a>
+            <a th:href="@{/signup}" class="btn btn-blue">회원가입</a>
+        </div>
+
+        <!-- 로그인 상태 -->
+        <div sec:authorize="isAuthenticated()">
+            <!--
+                sec:authentication="name" → SecurityContext의 username 출력
+                서버 렌더링이므로 JS 없이도 사용자 정보 표시 가능
+            -->
+            <p class="info">
+                👤 <b><span sec:authentication="name"></span></b> 님 환영합니다
+            </p>
+
+            <p>접근 가능한 페이지:</p>
+
+            <!-- ROLE_USER 이상 -->
+            <div sec:authorize="hasAnyRole('USER','MANAGER','ADMIN')">
+                <a th:href="@{/user}" class="btn btn-green">USER 페이지</a>
+            </div>
+
+            <!-- ROLE_MANAGER 이상 -->
+            <div sec:authorize="hasAnyRole('MANAGER','ADMIN')">
+                <a th:href="@{/manager}" class="btn btn-orange">MANAGER 페이지</a>
+            </div>
+
+            <!-- ROLE_ADMIN 전용 -->
+            <div sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/admin}" class="btn btn-red">ADMIN 페이지</a>
+            </div>
+
+            <br>
+            <button class="btn btn-red" onclick="logout()">로그아웃</button>
+        </div>
+    </div>
+
+<script>
+    async function logout() {
+        await fetch('/api/v1/auth/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        window.location.href = '/login';
+    }
+</script>
+</body>
+</html>

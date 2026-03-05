@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f2f5; }
+        .box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 320px; }
+        h2 { text-align: center; margin-bottom: 24px; }
+        input { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px; font-size: 15px; }
+        button:hover { background: #45a049; }
+        .link { text-align: center; margin-top: 16px; }
+        #msg { color: red; text-align: center; margin-top: 8px; font-size: 14px; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>🔐 Login</h2>
+
+    <!--
+        JWT Cookie 방식 유지
+        form submit이 아닌 fetch로 POST /login 호출
+        → JwtAuthenticationFilter가 JSON body 파싱
+        → 응답으로 httpOnly Cookie 세팅
+    -->
+    <input type="text"     id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">로그인</button>
+    <div id="msg"></div>
+    <div class="link"><a th:href="@{/signup}">회원가입</a></div>
+</div>
+
+<script>
+    /**
+     * 로그인 처리
+     * - fetch로 POST /login (Content-Type: application/json)
+     * - JwtAuthenticationFilter.attemptAuthentication() 호출
+     * - 성공: httpOnly Cookie(accessToken, refreshToken) 자동 저장
+     * - 실패: 401 → 에러 메시지 표시
+     *
+     * form submit을 쓰지 않는 이유:
+     * form은 application/x-www-form-urlencoded로 전송
+     * → JwtAuthenticationFilter의 ObjectMapper(@RequestBody)가 파싱 불가
+     */
+    async function login() {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        const msg      = document.getElementById('msg');
+
+        if (!username || !password) {
+            msg.textContent = '아이디와 비밀번호를 입력하세요';
+            return;
+        }
+
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
+                credentials: 'include'  // Cookie 수신
+            });
+
+            if (response.ok) {
+                // 서버가 httpOnly Cookie에 토큰 저장 완료
+                // JS는 Cookie 값에 접근 불가 → 브라우저가 이후 요청에 자동 첨부
+                window.location.href = '/index';
+            } else {
+                const data = await response.json();
+                msg.textContent = data.message || '로그인 실패';
+            }
+        } catch (e) {
+            msg.textContent = '서버 오류가 발생했습니다';
+        }
+    }
+
+    document.addEventListener('keypress', e => {
+        if (e.key === 'Enter') login();
+    });
+</script>
+</body>
+</html>

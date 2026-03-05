@@ -1,0 +1,59 @@
+package com.spring.token.config.jwt;
+
+import java.util.List;
+
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.spring.token.config.auth.PrincipalDetails;
+
+/**
+ * JWT 토큰 생성 및 검증 유틸리티
+ * - 토큰에 권한(roles)까지 포함하여 DB 조회 없이 인가 처리 가능
+ */
+public class JwtUtil {
+
+    /**
+     * Access Token 생성
+     * claim: uid, uname, roles (권한 포함)
+     */
+    public static String generateAccessToken(PrincipalDetails principalDetails) {
+        return null;
+    }
+
+    /**
+     * Refresh Token 생성
+     * claim: uname만 포함 (재발급용이므로 최소 정보만)
+     */
+    public static String generateRefreshToken(PrincipalDetails principalDetails) {
+        return null;
+    }
+
+    /**
+     * 토큰 검증 및 디코딩
+     * 만료 시 TokenExpiredException 발생
+     */
+    public static DecodedJWT verify(String token) {
+        return null;
+    }
+
+    /**
+     * 토큰에서 username 추출
+     */
+    public static String getUsername(String token) {
+        return null;
+    }
+
+    /**
+     * 토큰에서 roles 추출
+     */
+    public static List<String> getRoles(String token) {
+        return null;
+    }
+
+    /**
+     * 토큰 만료 여부만 확인 (서명은 유효한 경우)
+     */
+    public static boolean isExpired(String token) {
+       return false;
+    }
+}
+
