@@ -2,6 +2,7 @@ package com.spring.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true) //메서드 단위로 권한 검사하는 어노테이션
 public class SecurityConfig {
 
 	// 필터 체인
@@ -36,6 +38,7 @@ public class SecurityConfig {
 									.clearAuthentication(true) // security context를 초기화
 					);
 		
+		// URL 단위 보안
 		http
 			.authorizeHttpRequests(authorize ->
 												authorize

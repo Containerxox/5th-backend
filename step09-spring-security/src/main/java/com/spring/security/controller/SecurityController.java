@@ -1,5 +1,6 @@
 package com.spring.security.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,7 @@ public class SecurityController {
         return "manager";
     }
 
+    @PreAuthorize("hasrole('ADMIN')")  // 메서드 기준 보안
     @GetMapping("/about")
     public String moveAboutPage() {
         return "about";
