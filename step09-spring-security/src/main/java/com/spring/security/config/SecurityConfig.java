@@ -36,6 +36,16 @@ public class SecurityConfig {
 									.clearAuthentication(true) // security context를 초기화
 					);
 		
+		http
+			.authorizeHttpRequests(authorize ->
+												authorize
+													.requestMatchers("/user/**").hasAnyRole("USER","MANAGER","ADMIN")
+													.requestMatchers("/manager/**").hasAnyRole("MANAGER","ADMIN")
+													.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+													.anyRequest().permitAll()
+					
+			);
+		
 		
 		return http.build();
 	}
