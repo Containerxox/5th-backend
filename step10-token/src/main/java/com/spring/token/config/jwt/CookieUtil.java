@@ -17,7 +17,15 @@ public class CookieUtil {
      * @param httpOnly JS 접근 차단 여부
      */
     public static Cookie createCookie(String name, String value, int maxAge, boolean httpOnly) {
-        return null;
+        Cookie cookie = new Cookie(name, value);
+        
+        cookie.setHttpOnly(true); //JS 접근 차단
+        cookie.setSecure(false); //https가 아닌 http를 사용
+        cookie.setPath("/"); //루트에 대한 모든 경로로 cookie를 보낼거야.
+        cookie.setMaxAge(maxAge); //쿠키 만료 시간
+    	
+    	
+    	return cookie;
     }
 
     /**

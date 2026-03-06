@@ -94,7 +94,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 //      System.out.println(refreshToken);
 
         // httpOnly Cookie로 저장
-        
+        response.addCookie(CookieUtil.createCookie(
+        									JwtProperties.ACCESS_TOKEN_COOKIE,
+        									accessToken,
+        									JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME / 1000, //쿠키는 밀리초가 아니라 초로 변경해줘야 해
+        									true
+        					)); 
+        response.addCookie(CookieUtil.createCookie(
+										JwtProperties.REFRESH_TOKEN_COOKIE,
+										refreshToken,
+										JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME / 1000, //쿠키는 밀리초가 아니라 초로 변경해줘야 해
+										true
+        					));
 
         // 클라이언트에 로그인 성공 응답
         response.setStatus(HttpServletResponse.SC_OK);
