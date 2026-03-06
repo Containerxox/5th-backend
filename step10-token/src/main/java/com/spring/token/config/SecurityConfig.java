@@ -11,10 +11,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 import com.spring.token.config.jwt.JwtAuthenticationFilter;
 import com.spring.token.config.jwt.JwtAuthorizationFilter;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -30,6 +32,23 @@ public class SecurityConfig {
 			AuthenticationConfiguration authenticationConfiguration) throws Exception {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
+	
+	
+	// 403 -> redirect 방식 /access-denied
+	@Bean
+	public AccessDeniedHandler accessDeniedHandler() {
+		return (request, response, accessDeniedException) ->{
+			String requestURI = request.getRequestURI();
+			if(requestURI.startsWith("/api")) {
+				response.setStatus(403);
+	            response.setContentType("application/json;charset=UTF-8");
+	            response.getWriter().write("{\"message\":\"접근 권한이 없음\"}");
+			}else {
+				response.sendRedirect("/access-denied");
+			}
+		};
+	}
+	
 	
 	
 	// 필터 체인
@@ -48,6 +67,24 @@ public class SecurityConfig {
 											.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.formLogin(AbstractHttpConfigurer::disable)
 			.httpBasic(AbstractHttpConfigurer::disable);
+		
+		// 인가 실패  -> 핸들러 등록
+		http
+			.exceptionHandling(ex -> ex
+					.accessDeniedHandler(accessDeniedHandler())
+					.authenticationEntryPoint((request, response, accessDeniedException) ->{
+						String requestURI = request.getRequestURI();
+						if(requestURI.startsWith("/api")) {
+							response.setStatus(403);
+				            response.setContentType("application/json;charset=UTF-8");
+				            response.getWriter().write("{\"message\":\"로그인 필수\"}");
+						}else {
+							response.sendRedirect("/login");
+						}
+					})
+		);
+		
+		
 		
 		http
 			.authorizeHttpRequests(authorize -> authorize
