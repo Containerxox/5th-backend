@@ -51,5 +51,12 @@ public class CookieUtil {
      * Cookie 삭제 (maxAge=0으로 덮어씌우기)
      */
     public static void deleteCookie(HttpServletResponse response, String name) {
+    
+          Cookie cookie = new Cookie(name, null);
+          
+          cookie.setMaxAge(0);
+          cookie.setPath("/");
+          response.addCookie(cookie);
+
     }
 }
