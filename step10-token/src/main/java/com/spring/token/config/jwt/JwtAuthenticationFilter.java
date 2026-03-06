@@ -87,9 +87,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // JwtUtil로 토큰 생성 (roles 포함)
         String accessToken  = JwtUtil.generateAccessToken(principalDetails);
-//        System.out.println("----");
+//        System.out.println("----"); //확인용
 //        System.out.println(accessToken);
         String refreshToken = JwtUtil.generateRefreshToken(principalDetails);
+//      System.out.println("----"); // 확인용
+//      System.out.println(refreshToken);
 
         // httpOnly Cookie로 저장
         

@@ -38,7 +38,12 @@ public class JwtUtil {
      * claim: uname만 포함 (재발급용이므로 최소 정보만)
      */
     public static String generateRefreshToken(PrincipalDetails principalDetails) {
-        return null;
+    	
+    	return JWT.create()
+	    		.withSubject(principalDetails.getUsername())
+	    		.withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME))
+	    		.withClaim("uname",principalDetails.getUsers().getUsername())
+	    		.sign(Algorithm.HMAC256(JwtProperties.SECRET));
     }
 
     /**
