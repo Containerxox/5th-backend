@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.spring.token.config.jwt.JwtAuthenticationFilter;
+import com.spring.token.config.jwt.JwtAuthorizationFilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +39,8 @@ public class SecurityConfig {
 		
     	http
     		.addFilter(corsConfig.corsFilter())
-    		.addFilter(new JwtAuthenticationFilter(authenticationManager));
+    		.addFilter(new JwtAuthenticationFilter(authenticationManager)) // 필터 등록
+    		.addFilter(new JwtAuthorizationFilter(authenticationManager)); // 필터 등록
     	
 		http
 			.csrf(csrf -> csrf.disable())
@@ -66,10 +68,7 @@ public class SecurityConfig {
 					
 					// 그 외 모든 요청은 인증 처리가 완료되어야만 사용 가능
 					.anyRequest().authenticated()
-					
-					
-					
-					
+						
 		);
 		
 			

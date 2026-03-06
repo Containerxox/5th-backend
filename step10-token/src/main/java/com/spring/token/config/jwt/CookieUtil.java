@@ -32,6 +32,18 @@ public class CookieUtil {
      * Request에서 특정 이름의 Cookie 값 추출
      */
     public static String getCookieValue(HttpServletRequest request, String name) {
+    	
+    	Cookie[] cookies = request.getCookies();
+    	
+    	if(cookies == null) return null;
+    	
+    	for(Cookie cookie : cookies) {
+    		if(name.equals(cookie.getName())) { //쿠키명이 accesstoken이면
+    			return cookie.getValue(); //쿠키 값(accesstoken) 반환
+    		}
+    	}
+    	
+    	
         return null;
     }
 

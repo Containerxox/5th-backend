@@ -1,6 +1,7 @@
 package com.spring.token.config.jwt;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -36,12 +37,27 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             throws IOException, ServletException {
 
         // Cookie에서 Access Token 추출
-
+    	String accessToken = CookieUtil.getCookieValue(request, JwtProperties.ACCESS_TOKEN_COOKIE);
+//    	System.out.println("-------");
+//    	System.out.println(accessToken);
+    	
         // 토큰 없으면 인증 없이 통과 (permitAll 경로는 통과, 인가 필요 경로는 Security가 403 처리)
-
+    	if(accessToken == null) {
+    		chain.doFilter(request, response);
+    		return;
+    	}
+    	
+    	
         try {
             // 토큰 검증 (서명 + 만료 확인)
             // 만료 시 TokenExpiredException, 변조 시 JWTVerificationException 발생
+        	
+        	List<String> roles = JwtUtil.getRoles(accessToken);
+        	String username = JwtUtil.getUsername(accessToken);
+        	
+        	
+        	// 토큰 정보를 통해 인증 처리가 된 Authentication 객체를 생성-> Security Context Holder에 저장
+        	
 
 
         } catch (TokenExpiredException e) {
