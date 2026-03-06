@@ -16,40 +16,36 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import com.spring.token.config.jwt.JwtAuthenticationFilter;
 import com.spring.token.config.jwt.JwtAuthorizationFilter;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
 	
-	private final CorsConfig corsConfig;
+	private final CorsConfig corsConfig; 
 	
+	// 
 	@Bean
 	public AuthenticationManager authenticationManager(
 			AuthenticationConfiguration authenticationConfiguration) throws Exception {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
 	
-	
 	// 403 -> redirect 방식 /access-denied
 	@Bean
 	public AccessDeniedHandler accessDeniedHandler() {
-		return (request, response, accessDeniedException) ->{
-			String requestURI = request.getRequestURI();
+		return (reqeust, response, accessDeniedException) -> {
+			String requestURI = reqeust.getRequestURI();
 			if(requestURI.startsWith("/api")) {
 				response.setStatus(403);
 	            response.setContentType("application/json;charset=UTF-8");
 	            response.getWriter().write("{\"message\":\"접근 권한이 없음\"}");
-			}else {
+			} else {
 				response.sendRedirect("/access-denied");
 			}
 		};
 	}
-	
-	
 	
 	// 필터 체인
     @Bean
@@ -58,9 +54,9 @@ public class SecurityConfig {
 		
     	http
     		.addFilter(corsConfig.corsFilter())
-    		.addFilter(new JwtAuthenticationFilter(authenticationManager)) // 필터 등록
-    		.addFilter(new JwtAuthorizationFilter(authenticationManager)); // 필터 등록
-    	
+    		.addFilter(new JwtAuthenticationFilter(authenticationManager))
+    		.addFilter(new JwtAuthorizationFilter(authenticationManager));
+		
 		http
 			.csrf(csrf -> csrf.disable())
 			.sessionManagement(session -> session
@@ -68,29 +64,27 @@ public class SecurityConfig {
 			.formLogin(AbstractHttpConfigurer::disable)
 			.httpBasic(AbstractHttpConfigurer::disable);
 		
-		// 인가 실패  -> 핸들러 등록
+		// 인가 실패 -> 핸들러 등록
 		http
 			.exceptionHandling(ex -> ex
 					.accessDeniedHandler(accessDeniedHandler())
-					.authenticationEntryPoint((request, response, accessDeniedException) ->{
-						String requestURI = request.getRequestURI();
-						if(requestURI.startsWith("/api")) {
-							response.setStatus(403);
+					.authenticationEntryPoint((reqeust, response, accessDeniedException) -> {
+						String requestURI = reqeust.getRequestURI();
+						if(requestURI.startsWith("/api/")) {
+							response.setStatus(401);
 				            response.setContentType("application/json;charset=UTF-8");
 				            response.getWriter().write("{\"message\":\"로그인 필수\"}");
-						}else {
+						} else {
 							response.sendRedirect("/login");
 						}
 					})
 		);
 		
-		
-		
 		http
 			.authorizeHttpRequests(authorize -> authorize
 					
 					// 공개 페이지
-					.requestMatchers("/", "/index", "/signup", "/about", "/access-denied","/login").permitAll()
+					.requestMatchers("/", "/index", "/signup", "/about", "/access-denied", "/login").permitAll()
 					// 공개 API
 					.requestMatchers("/api/v1/signup", "/api/v1/auth/**").permitAll()
 					// 정적 리소스
@@ -103,12 +97,14 @@ public class SecurityConfig {
 					// ADMIN 이상
 					.requestMatchers("/admin", "/api/v1/admin/**").hasAnyRole("ADMIN")
 					
-					// 그 외 모든 요청은 인증 처리가 완료되어야만 사용 가능
 					.anyRequest().authenticated()
-						
 		);
 		
-			
+		
+		
+		
+		
+		
 		return http.build();
 	}
     
@@ -119,4 +115,5 @@ public class SecurityConfig {
 	}
 	
 }
+
 
