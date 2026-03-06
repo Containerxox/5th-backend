@@ -53,10 +53,10 @@ public class SecurityConfig {
 			.authorizeHttpRequests(authorize -> authorize
 					
 					// 공개 페이지
-					.requestMatchers("/","/index","/signup","/about","/access-denied").permitAll()
+					.requestMatchers("/", "/index", "/signup", "/about", "/access-denied","/login").permitAll()
 					// 공개 API
 					.requestMatchers("/api/v1/signup", "/api/v1/auth/**").permitAll()
-					// 정적 리소스 접근 허용
+					// 정적 리소스
 					.requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
 					
 					// USER 이상

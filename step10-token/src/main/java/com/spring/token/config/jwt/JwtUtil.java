@@ -20,18 +20,19 @@ public class JwtUtil {
      * claim: uid, uname, roles (권한 포함)
      */
     public static String generateAccessToken(PrincipalDetails principalDetails) {
-    	
+    
     	List<String> roles = principalDetails.getAuthorities()
     											.stream()
-    											.map(auth->auth.getAuthority())
+    											.map(auth -> auth.getAuthority())
     											.toList();
-		return JWT.create()
-		    		.withSubject(principalDetails.getUsername())
-		    		.withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME))
-		    		.withClaim("uid", principalDetails.getUsers().getId())
-		    		.withClaim("uname",principalDetails.getUsers().getUsername())
-		    		.withClaim("roles", roles)
-		    		.sign(Algorithm.HMAC256(JwtProperties.SECRET));
+    	
+    	return  JWT.create()
+	        		.withSubject(principalDetails.getUsername())
+	        		.withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME))
+	        		.withClaim("uid", principalDetails.getUsers().getId())
+	        		.withClaim("uname", principalDetails.getUsers().getUsername())
+	        		.withClaim("roles", roles)
+	        		.sign(Algorithm.HMAC512(JwtProperties.SECRET));
     }
 
     /**
@@ -39,12 +40,11 @@ public class JwtUtil {
      * claim: uname만 포함 (재발급용이므로 최소 정보만)
      */
     public static String generateRefreshToken(PrincipalDetails principalDetails) {
-    	
-    	return JWT.create()
-	    		.withSubject(principalDetails.getUsername())
-	    		.withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME))
-	    		.withClaim("uname",principalDetails.getUsers().getUsername())
-	    		.sign(Algorithm.HMAC256(JwtProperties.SECRET));
+        return JWT.create()
+        			.withSubject(principalDetails.getUsername())
+        			.withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME))
+        			.withClaim("uname", principalDetails.getUsers().getUsername())
+        			.sign(Algorithm.HMAC512(JwtProperties.SECRET));
     }
 
     /**
@@ -52,10 +52,9 @@ public class JwtUtil {
      * 만료 시 TokenExpiredException 발생
      */
     public static DecodedJWT verify(String token) {
-    	
         return JWT.require(Algorithm.HMAC512(JwtProperties.SECRET))
-        		.build()
-        		.verify(token);
+        			.build()
+        			.verify(token);
     }
 
     /**
@@ -76,14 +75,11 @@ public class JwtUtil {
      * 토큰 만료 여부만 확인 (서명은 유효한 경우)
      */
     public static boolean isExpired(String token) {
-    	
     	try {
     		verify(token);
     		return false;
-    	}catch(TokenExpiredException e) {
+    	} catch (TokenExpiredException e) {
     		return true;
-    	}
-    	
+		}
     }
 }
-

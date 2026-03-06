@@ -1,9 +1,16 @@
 package com.spring.token.config.jwt;
 
+
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
@@ -38,15 +45,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         // Cookie에서 Access Token 추출
     	String accessToken = CookieUtil.getCookieValue(request, JwtProperties.ACCESS_TOKEN_COOKIE);
-//    	System.out.println("-------");
-//    	System.out.println(accessToken);
     	
         // 토큰 없으면 인증 없이 통과 (permitAll 경로는 통과, 인가 필요 경로는 Security가 403 처리)
     	if(accessToken == null) {
     		chain.doFilter(request, response);
     		return;
     	}
-    	
     	
         try {
             // 토큰 검증 (서명 + 만료 확인)
@@ -55,10 +59,17 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         	List<String> roles = JwtUtil.getRoles(accessToken);
         	String username = JwtUtil.getUsername(accessToken);
         	
-        	
-        	// 토큰 정보를 통해 인증 처리가 된 Authentication 객체를 생성-> Security Context Holder에 저장
-        	
-
+        	if(username != null && roles != null) {
+        		// 토큰 정보 -> 인증 처리가 된 Authentication 객체 생성 -> Security Context Holder 저장
+        		List<GrantedAuthority> authorities = roles.stream()
+        													.map(SimpleGrantedAuthority::new)
+        													.collect(Collectors.toList());
+        		
+        		Authentication authentication = 
+        				new UsernamePasswordAuthenticationToken(username, null, authorities);
+        		
+        		SecurityContextHolder.getContext().setAuthentication(authentication);
+        	}
 
         } catch (TokenExpiredException e) {
             // Access Token 만료 → 클라이언트가 Refresh Token으로 재발급 요청해야 함
