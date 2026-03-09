@@ -3,8 +3,10 @@ package board.controller;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -37,6 +39,19 @@ public class PostController {
 		return "posts/post-form";
 	}
 	
+	
+	
+	@GetMapping("/{pid}")
+	public String getPost(@PathVariable Long pid, ModelMap map) {
+		
+		PostDto post= postService.getPost(pid);
+		map.addAttribute("post", post);
+		
+		return "posts/post-detail";
+	}
+	
+	
+	
 	@PostMapping
 	public String registerPost(
 			PostDto postDto
@@ -53,5 +68,8 @@ public class PostController {
 		
 		return "redirect:/posts";
 	}
+	
+	
+	
 	
 }

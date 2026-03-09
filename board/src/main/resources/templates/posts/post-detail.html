@@ -16,20 +16,25 @@
 
   <main id="post-main" class="container">
     <header id="post-header" class="py-5 text-center">
-      <h1>First Post</h1>
+      <h1>Post Detail</h1>
     </header>
 
     <div class="row g-5">
       <section class="col-md-3 col-lg-4 order-md-last">
         <aside>
-          <p><a id="email" href="mailto:web-board-project@gmail.com">Admin Email</a></p>
-          <p><time id="created-date" datetime="2026-03-09T00:00:00">2026-03-09</time></p>
-          <p><span id="category" class="badge text-bg-secondary mx-1"><a class="text-reset">WEB</a></span></p>
+          <p><a id="created-by" th:text="${post?.createdBy}">Admin Email</a></p>
+          <p><time id="created-date" datetime="2026-03-09T00:00:00" th:text="${#temporals.format(post.createdDate,'yyyy-MM-dd HH:mm')}">2026-03-09</time></p>
+          <p><span id="category" class="badge text-bg-secondary mx-1"><a class="text-reset" th:text="${post.categoryType}">WEB</a></span></p>
         </aside>
       </section>
 
       <article id="post-content" class="col-md-9 col-lg-8">
-        <pre>Post Content</pre>
+         <div class="card">
+	  		<div class="card-body">
+	    		<h5 class="card-title">Title : [[${post?.title}]]</h5>
+	    		<p class="card-text">Title : [[${post?.content}]]</p>
+	  		</div>
+		</div>
       </article>
     </div>
 
@@ -41,6 +46,8 @@
         </div>
       </form>
     </div>
+    
+   
 
     <div class="row g-5">
       <section>

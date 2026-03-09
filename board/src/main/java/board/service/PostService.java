@@ -1,6 +1,7 @@
 package board.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,9 @@ public class PostService {
 	private final PostRepository postRepository;
 	
     public PostDto getPost(Long pid) {
-    	return null;
+    	  return postRepository.findById(pid)
+  	            				.map(PostDto::from)
+  	            				.orElseThrow(() -> new NoSuchElementException("해당 게시글 존재 X"));
     }
     
 	@Transactional
@@ -51,5 +54,9 @@ public class PostService {
 //										.map(post -> PostDto.from(post))
 										.toList();
 	}
+	
+
+
+	
 	
 }
