@@ -15,6 +15,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 
 import com.spring.token.config.jwt.JwtAuthenticationFilter;
 import com.spring.token.config.jwt.JwtAuthorizationFilter;
+import com.spring.token.service.TokenRedisService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 	
 	private final CorsConfig corsConfig; 
+	private final TokenRedisService tokenRedisService;
 	
 	// 
 	@Bean
@@ -54,7 +56,7 @@ public class SecurityConfig {
 		
     	http
     		.addFilter(corsConfig.corsFilter())
-    		.addFilter(new JwtAuthenticationFilter(authenticationManager))
+    		.addFilter(new JwtAuthenticationFilter(authenticationManager, tokenRedisService))
     		.addFilter(new JwtAuthorizationFilter(authenticationManager));
 		
 		http

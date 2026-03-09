@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.token.config.auth.PrincipalDetails;
 import com.spring.token.dto.LoginRequestDto;
+import com.spring.token.service.TokenRedisService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -33,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final TokenRedisService tokenRedisService;
 
     /**
      * [Step 1] 로그인 인증 시도
@@ -92,7 +94,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String refreshToken = JwtUtil.generateRefreshToken(principalDetails);
 //      System.out.println("----"); // 확인용
 //      System.out.println(refreshToken);
+        
+        
+        // RT를 Redis에 저장
+        tokenRedisService.saveRefreshToken(
+        		principalDetails.getUsername(),
+        		refreshToken,
+        		JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME / 1000);
 
+        
         // httpOnly Cookie로 저장
         response.addCookie(CookieUtil.createCookie(
         									JwtProperties.ACCESS_TOKEN_COOKIE,
