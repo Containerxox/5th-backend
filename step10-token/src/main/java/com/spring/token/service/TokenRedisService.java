@@ -39,9 +39,21 @@ public class TokenRedisService {
 	}
 	
 	
+	// 로그아웃 시, RT 삭제
+	public void deleteRefreshToke(String username) {
+		redisTemplate.delete(RT_PREFIX + username);
+	}
+	
 	
 	//  --- Black List : (로그아웃하는)Access Token ---
-	
+	// 로그아웃 시, AT -> 블랙리스트 등록
+	public void addToBlackList(String accessToken, long remainingTtlSeconds) {
+		redisTemplate.opsForValue().set(
+								BL_PREFIX + accessToken,
+								"logout",
+								remainingTtlSeconds,
+								TimeUnit.SECONDS);
+	}
 	
 	
 	

@@ -82,4 +82,20 @@ public class JwtUtil {
     		return true;
 		}
     }
+
+    
+    /*
+     * AT 블랙리스트 추가 시, 남아있는 TTL 계산 
+     */
+	public static long getRemaingExpiration(String accessToken) {
+		
+		try {
+			Date expiration = verify(accessToken).getExpiresAt();
+			long remaining = expiration.getTime() - System.currentTimeMillis();
+			return remaining > 0 ? remaining / 1000 : 0;
+		}catch(Exception e){
+			return 0;
+		}
+		
+	}
 }

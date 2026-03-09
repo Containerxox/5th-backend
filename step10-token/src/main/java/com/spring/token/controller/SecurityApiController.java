@@ -22,6 +22,7 @@ import com.spring.token.config.jwt.JwtProperties;
 import com.spring.token.config.jwt.JwtUtil;
 import com.spring.token.entity.Users;
 import com.spring.token.repository.UsersRepository;
+import com.spring.token.service.TokenRedisService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,6 +35,7 @@ public class SecurityApiController {
 
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenRedisService tokenRedisService;
 
     // ============================================================
     // 공개 API (permitAll)
@@ -122,10 +124,25 @@ public class SecurityApiController {
 
     /**
      * 로그아웃
-     * - Cookie 삭제
+     * - Cookie 삭제 + redis RT 삭제, AT를 BL 등록
      */
     @PostMapping("/auth/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response) {
+    public ResponseEntity<?> logout(HttpServletRequest request,HttpServletResponse response) {
+    	
+    	// AT 존재 확인 -> BL 등록
+    	String accessToken = CookieUtil.getCookieValue(request, JwtProperties.ACCESS_TOKEN_COOKIE);
+    	
+    	if(accessToken != null) {
+    		
+    		// AT를 BL 등록
+    		long remaining = JwtUtil.getRemaingExpiration(accessToken); //AT가 갖고 있는 남은 TTL시간
+    		tokenRedisService.addToBlackList(accessToken, remaining); 
+    		
+    		// RT 삭제
+    		String username = JwtUtil.getUsername(accessToken);
+    		tokenRedisService.deleteRefreshToke(username);
+    	}
+    	
         CookieUtil.deleteCookie(response, JwtProperties.ACCESS_TOKEN_COOKIE);
         CookieUtil.deleteCookie(response, JwtProperties.REFRESH_TOKEN_COOKIE);
         return ResponseEntity.ok(Map.of("message", "로그아웃 성공"));
