@@ -56,5 +56,9 @@ public class TokenRedisService {
 	}
 	
 	
+	// AT가 블랙리스트에 포함되는지 여부 확인
+	public boolean isBlacklisted(String accessToken) {
+		return Boolean.TRUE.equals(redisTemplate.hasKey(BL_PREFIX) + accessToken);
+	}
 	
 }

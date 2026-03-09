@@ -57,7 +57,7 @@ public class SecurityConfig {
     	http
     		.addFilter(corsConfig.corsFilter())
     		.addFilter(new JwtAuthenticationFilter(authenticationManager, tokenRedisService))
-    		.addFilter(new JwtAuthorizationFilter(authenticationManager));
+    		.addFilter(new JwtAuthorizationFilter(authenticationManager,tokenRedisService));
 		
 		http
 			.csrf(csrf -> csrf.disable())

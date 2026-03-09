@@ -14,11 +14,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.spring.token.service.TokenRedisService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 /**
  * JWT 인증/인가 필터 (모든 요청에 실행)
@@ -34,9 +36,14 @@ import jakarta.servlet.http.HttpServletResponse;
  * → 클라이언트(axios)가 /api/v1/auth/refresh 호출하여 재발급
  */
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+	
+	private final TokenRedisService tokenRedisService;
+	
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
+    							TokenRedisService tokenRedisService) {
         super(authenticationManager);
+        this.tokenRedisService = tokenRedisService;
     }
 
     @Override
@@ -51,6 +58,17 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     		chain.doFilter(request, response);
     		return;
     	}
+    	
+    	// AT가 BL에 포함되어 있는지 확인 (로그아웃된 AT 차단)
+    	if(tokenRedisService.isBlacklisted(accessToken)) {
+    		  response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+              response.setContentType("application/json;charset=UTF-8");
+              response.getWriter().write("{\"message\":\"로그아웃된 토큰\"}");
+              return;
+    	}
+    	
+    	
+    	
     	
         try {
             // 토큰 검증 (서명 + 만료 확인)
