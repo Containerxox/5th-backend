@@ -91,8 +91,16 @@ public class SecurityApiController {
         }
 
         try {
-            // Refresh Token 검증
+            // Refresh Token 검증 + Redis에 있는 RT 검증
             String username = JwtUtil.getUsername(refreshToken);
+            
+            // Redis에서 RT 일치 검증
+            // 토큰 유효한지 확인 -> 유효하면 DB까지 갈 필요 없음
+            if(!tokenRedisService.isRefreshTokenValid(username, refreshToken)) {
+            	return ResponseEntity.status(401).body(Map.of("message", "사용자를 찾을 수 없습니다"));
+            }
+            
+            
             Users user = usersRepository.findByUsername(username);
 
             if (user == null) {
@@ -101,9 +109,16 @@ public class SecurityApiController {
 
             PrincipalDetails principalDetails = new PrincipalDetails(user);
 
-            // 새 Access Token 발급
+            // 새 Access Token 발급 + 새 RT 발급 (기존 Redis에 있는 RT 변경, 쿠키로 다시 전달)
             String newAccessToken = JwtUtil.generateAccessToken(principalDetails);
-
+            String newRefreshToken = JwtUtil.generateRefreshToken(principalDetails);
+            
+            // RT Rotation : Redis RT 교체
+            tokenRedisService.rotateRefreshToken(
+            		username,
+            		newRefreshToken,
+            		JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME / 1000);
+            
             // Cookie 갱신
             response.addCookie(CookieUtil.createCookie(
                     JwtProperties.ACCESS_TOKEN_COOKIE,
@@ -112,6 +127,14 @@ public class SecurityApiController {
                     true
             ));
 
+            response.addCookie(CookieUtil.createCookie(
+                    JwtProperties.REFRESH_TOKEN_COOKIE,
+                    newRefreshToken,
+                    JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME / 1000,
+                    true
+            ));
+            
+            
             return ResponseEntity.ok(Map.of("message", "Access Token 재발급 성공"));
 
         } catch (TokenExpiredException e) {

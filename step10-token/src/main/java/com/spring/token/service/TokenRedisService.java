@@ -32,12 +32,20 @@ public class TokenRedisService {
 		 			RT_PREFIX + username, 
 		 			refreshToken,
 		 			ttlSeconds, 
-		 			TimeUnit.SECONDS
-		 	);
-		 	
-		 	
+		 			TimeUnit.SECONDS);
 	}
 	
+	// 요청 시, Redis에 저장된 RT 일치 검증
+	public boolean isRefreshTokenValid(String username, String refreshToken) {
+		String stored = redisTemplate.opsForValue().get(RT_PREFIX + username);
+		return stored != null && stored.equals(refreshToken);
+	}
+	
+	// RT Rotation : 기존 Redis RT 삭제 -> 새 RT 저장
+	public void rotateRefreshToken(String username, String newRefreshToken, long ttlSeconds) {
+		redisTemplate.delete(RT_PREFIX + username);
+		saveRefreshToken(username, newRefreshToken, ttlSeconds);
+	}
 	
 	// 로그아웃 시, RT 삭제
 	public void deleteRefreshToke(String username) {
@@ -60,5 +68,8 @@ public class TokenRedisService {
 	public boolean isBlacklisted(String accessToken) {
 		return Boolean.TRUE.equals(redisTemplate.hasKey(BL_PREFIX) + accessToken);
 	}
+
+
+	
 	
 }
