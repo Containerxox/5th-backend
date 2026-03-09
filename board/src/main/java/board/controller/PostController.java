@@ -26,7 +26,7 @@ public class PostController {
 	@GetMapping
 	public String getPosts(ModelMap map) {
 		
-		List<Post> posts = postService.getPosts();
+		List<PostDto> posts = postService.getPosts();
 		map.addAttribute("posts", posts);
 		
 		return "posts/index";
@@ -34,14 +34,18 @@ public class PostController {
 	
 	@GetMapping("/form")
 	public String postFormPage() {
-		return "/posts/form";
+		return "posts/post-form";
 	}
 	
 	@PostMapping
 	public String registerPost(
 			PostDto postDto
 	) {
-		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN);
+//		System.out.println("-------");  // 확인용
+//		System.out.println(postDto);
+		
+		// 로그인 되었다고 가정하고 진행
+		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN); //게시글 작성하는 작성자의 정보
 		postService.registerPost(PostDto.of(postDto.getTitle(), 
 											postDto.getContent(), 
 											postDto.getCategoryType(), 

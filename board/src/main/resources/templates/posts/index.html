@@ -16,6 +16,7 @@
   <main class="container">
 
 |
+
     <div class="row">
       <table class="table" id="post-table">
         <thead>
@@ -27,12 +28,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td class="title"><a href="">Title</a></td>
-          <td class="category"><span class="badge text-bg-secondary mx-1"><a class="text-reset" href="">Category</a></span></td>
-          <td class="uid">Admin</td>
-          <td class="created-date"><time>2026-03-09</time></td>
-        </tr>
+        <tr th:each="post : ${posts}">
+          <td class="title"><a th:text="${post?.title}" href="">Title</a></td>
+          <td class="category"><span class="badge text-bg-secondary mx-1" th:text="${post?.categoryType}">Category</span></td>
+          <td class="uid" th:text="${post?.createdBy}">Admin</td>
+          <td class="created-date" th:text="${#temporals.format(post?.createdDate, 'yyyy-MM-dd HH:mm:ss')}">2026-03-09</td>
         </tbody>
       </table>
     </div>

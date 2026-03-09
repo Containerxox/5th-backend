@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class PostService {
 	
 	private final UserRepository userRepository;
-	private final PostRepository postReository;
+	private final PostRepository postRepository;
 	
     public PostDto getPost(Long pid) {
     	return null;
@@ -25,14 +25,16 @@ public class PostService {
     
 	@Transactional
     public void registerPost(PostDto postDto) {
-    	User user = userRepository.save(User.of(postDto.getUserDto().getUid(),
-    											postDto.getUserDto().getPassword(),
-    											postDto.getUserDto().getPassword(),
-    											postDto.getUserDto().getEmail(),
-    											postDto.getUserDto().getUserRoleType()));
-    	
+		// 로그인 되었다고 가정 : save는 처음 1번만!
+//    	User user = userRepository.save(User.of(postDto.getUserDto().getUid(),
+//    											postDto.getUserDto().getPassword(),
+//    											postDto.getUserDto().getPassword(),
+//    											postDto.getUserDto().getEmail(),
+//    											postDto.getUserDto().getUserRoleType()));
+    	User user = userRepository.getReferenceById(postDto.getUserDto().getUid());
+		
     	Post post = postDto.toEntity(user);
-    	postReository.save(post);
+    	postRepository.save(post);
     }
 	
     public void updatePost(Long pid, PostDto postDto) {
@@ -43,8 +45,11 @@ public class PostService {
 
     }
 
-	public List<Post> getPosts() {
-		return postReository.findAll();
+	public List<PostDto> getPosts() {
+		return postRepository.findAll().stream()
+										.map(PostDto::from)
+//										.map(post -> PostDto.from(post))
+										.toList();
 	}
 	
 }

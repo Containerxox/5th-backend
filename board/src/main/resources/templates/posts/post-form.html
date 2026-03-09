@@ -19,6 +19,14 @@
     </header>
 
     <form th:action="@{/posts}" method="post" id="post-form">
+   		<div class="row mb-3 justify-content-md-center">
+	  		<select class="form-select" name="categoryType" aria-label="Default select example">
+				<option>Category</option>
+				<option value="FRONT" >FRONT</option>
+				<option value="WEB" >WEB</option>
+				<option value="BACKEND" >BACKEND</option>
+	  		</select>
+		</div>
       <div class="row mb-3 justify-content-md-center">
         <label for="title" class="col-sm-2 col-lg-1 col-form-label text-sm-end">Title</label>
         <div class="col-sm-8 col-lg-9">
