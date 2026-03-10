@@ -37,7 +37,11 @@ public class PostCommentService {
 		
 	}
 	
+	@Transactional
 	public void deletePostComment(Long pcid, String uid) {
+
+		postCommentRepository.deleteByIdAndUser_Uid(pcid,uid);
+		
 
 	}
 	

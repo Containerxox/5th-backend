@@ -64,8 +64,10 @@
 
         <ul id="post-comment" class="row col-md-10 col-lg-8 pt-3">
           <li class="post-comment" th:each="comment : ${comments}">
-            <form class="comment-delete-form">
-              <input type="hidden" class="post-id">
+          	<hr>
+            <form class="comment-delete-form" method="POST" 
+            		th:action="@{/comments/{pcid}/delete(pcid=${comment.id})}">
+              <input type="hidden" class="post-id" name="pid" th:value="${post.id}">
               <div class="row">
                 <div class="col-md-10 col-lg-9">
                   <strong th:text="${comment?.uid}">Comment Creator</strong>

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import board.dto.PostCommentDto;
 import board.dto.PostDto;
@@ -36,8 +37,15 @@ public class PostCommentController {
 		return "redirect:/posts/" + postCommentRequest.getPid();
 	}
 	
-	@DeleteMapping("/{pcid}")
-	public String deletePostComment(@PathVariable Long pcid) {
-		return "";
+	@PostMapping("/{pcid}/delete")
+	public String deletePostComment(@PathVariable Long pcid, @RequestParam Long pid) {
+		
+		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN);
+		postCommentService.deletePostComment(pcid, userDto.getUid());
+		
+		return "redirect:/posts/" + pid;
+		
+		
+
 	}
 }
