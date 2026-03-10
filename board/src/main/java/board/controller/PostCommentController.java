@@ -43,8 +43,8 @@ public class PostCommentController {
 		// 로그인 가정
 		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN);
 		
-		// 댓글 존재 + 댓글 작성자만이 삭제 가능하도록
-		postCommentService.deletePostComment(pcid, userDto.getUid());
+		// 댓글 존재 + 댓글 작성자만이 삭제 가능하도록m + post 존재여부 검증
+		postCommentService.deletePostComment(pcid, pid, userDto.getUid());
 		
 		return "redirect:/posts/" + pid;
 		

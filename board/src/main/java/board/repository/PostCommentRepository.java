@@ -8,6 +8,8 @@ import board.entity.PostComment;
 @Repository
 public interface PostCommentRepository extends JpaRepository<PostComment, Long>{
 
-	void deleteByIdAndUser_Uid(Long pcid, String uid);
+//	void deleteByIdAndUser_Uid(Long pcid, String uid);
+
+	void deleteByIdAndPost_IdAndUser_Uid(Long pcid, Long pid, String uid);
 
 }

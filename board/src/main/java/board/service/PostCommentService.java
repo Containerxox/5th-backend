@@ -38,9 +38,10 @@ public class PostCommentService {
 	}
 	
 	@Transactional
-	public void deletePostComment(Long pcid, String uid) {
+	public void deletePostComment(Long pcid,Long pid, String uid) {
 
-		postCommentRepository.deleteByIdAndUser_Uid(pcid,uid);
+//		postCommentRepository.deleteByIdAndUser_Uid(pcid,uid);
+		postCommentRepository.deleteByIdAndPost_IdAndUser_Uid(pcid,pid,uid);
 		
 
 	}
