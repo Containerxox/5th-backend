@@ -62,19 +62,15 @@
           </div>
         </form>
 
- <!--       <ul id="post-comment" class="row col-md-10 col-lg-8 pt-3">
-          <li class="post-comment">
+        <ul id="post-comment" class="row col-md-10 col-lg-8 pt-3">
+          <li class="post-comment" th:each="comment : ${comments}">
             <form class="comment-delete-form">
               <input type="hidden" class="post-id">
               <div class="row">
                 <div class="col-md-10 col-lg-9">
-                  <strong>Comment Creator</strong>
-                  <small><time>2026-03-09</time></small>
-                  <p class="mb-1">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </p>
+                  <strong th:text="${comment?.uid}">Comment Creator</strong>
+                  <small><time th:text="${#temporals.format(comment.createdDate,'yyyy-MM-dd HH:mm')}">2026-03-09</time></small>
+                  <p class="mb-1" th:text="${comment?.content}"></p>
                 </div>
                 <div class="col-2 mb-3 align-self-center">
                   <button type="submit" class="btn btn-outline-danger">DELETE</button>
@@ -82,7 +78,7 @@
               </div>
             </form>
           </li>
-        </ul> -->
+        </ul> 
       </section>
     </div>
 

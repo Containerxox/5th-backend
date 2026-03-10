@@ -56,7 +56,7 @@ public class PostWithCommentsResponse {
 	   
 	   
 	   
-	   // (대댓글이 달리는 경우 중복을 제거하기 위해) id값으로 중복을 제거 -> (날짜)내림차순 정렬 [CreatedDate DESC 정렬] -> return
+	   // (대댓글이 달리는 경우 중복을 제거하기 위해) id값으로 중복을 제거 [같은 id 댓글 제거] -> (날짜)내림차순 정렬 [CreatedDate DESC 정렬] -> return
 	   // 제일 최근에 작성된 댓글이 위에 올라오게 정렬됨
 	   return map.values().stream()
 			   				.collect(Collectors.toCollection(() -> new TreeSet<>(
