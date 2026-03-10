@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 
 import board.dto.PostDto;
+import board.dto.PostWithCommentsDto;
 import board.entity.Post;
 import board.entity.User;
 import board.repository.PostRepository;
@@ -20,9 +21,17 @@ public class PostService {
 	private final UserRepository userRepository;
 	private final PostRepository postRepository;
 	
+	@Transactional
     public PostDto getPost(Long pid) {
     	  return postRepository.findById(pid)
   	            				.map(PostDto::from)
+  	            				.orElseThrow(() -> new NoSuchElementException("해당 게시글 존재 X"));
+    }
+	
+	@Transactional
+    public PostWithCommentsDto getPostWithComments(Long pid) {
+    	  return postRepository.findById(pid)
+  	            				.map(PostWithCommentsDto::from)
   	            				.orElseThrow(() -> new NoSuchElementException("해당 게시글 존재 X"));
     }
     

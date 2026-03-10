@@ -23,17 +23,17 @@ public class PostCommentService {
 	@Transactional
 	public void registerPostComment(PostCommentDto postCommentDto) {
 		
-//		// User
-//		User user = userRepository.getReferenceById(postCommentDto.getUserDto().getUid());
-//		
-//		// Post
-//		Post post = postRepository.getReferenceById(postCommentDto.getPid());
-//		
-//		// PostCommentDto -> PostComment
-//		PostComment postComment = postCommentDto.toEntity(post, user);
-//		
-//		// 댓글 저장
-//		postCommentRepository.save(postComment);
+		// User
+		User user = userRepository.getReferenceById(postCommentDto.getUserDto().getUid());
+		
+		// Post
+		Post post = postRepository.getReferenceById(postCommentDto.getPid());
+		
+		// PostCommentDto -> PostComment
+		PostComment postComment = postCommentDto.toEntity(post, user);
+		
+		// 댓글 저장
+		postCommentRepository.save(postComment);
 		
 	}
 	
