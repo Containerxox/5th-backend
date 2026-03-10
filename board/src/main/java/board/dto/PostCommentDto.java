@@ -15,28 +15,28 @@ import lombok.ToString;
 public class PostCommentDto {
 	private Long id;
     private String content;
-    private Post post;
-    private User user;
+    private Long pid;
+    private UserDto userDto;
     private LocalDateTime createdDate;
     private String createdBy;
     private LocalDateTime modifiedDate;
     private String modifiedBy;
     
-	public static PostCommentDto of(String content, Post post, User user) {
-		return PostCommentDto.of(null, content, post, user, null, null, null, null);
+	public static PostCommentDto of(String content, Long pid, UserDto userDto) {
+		return PostCommentDto.of(null, content, pid, userDto, null, null, null, null);
 	}
     
-	public static PostCommentDto of(Long id, String content, Post post, User user, LocalDateTime createdDate, String createdBy,
+	public static PostCommentDto of(Long id, String content, Long pid, UserDto userDto, LocalDateTime createdDate, String createdBy,
 			LocalDateTime modifiedDate, String modifiedBy) {
-		return new PostCommentDto(id, content, post, user, createdDate, createdBy, modifiedDate, modifiedBy);
+		return new PostCommentDto(id, content, pid, userDto, createdDate, createdBy, modifiedDate, modifiedBy);
 	}
 	
 	public static PostCommentDto from(PostComment postComment) {
 		return new PostCommentDto(
 									postComment.getId(),
 									postComment.getContent(),
-									postComment.getPost(),
-									postComment.getUser(),
+									postComment.getPost().getId(),
+									UserDto.from(postComment.getUser()),
 									postComment.getCreatedDate(),
 									postComment.getCreatedBy(),
 									postComment.getModifiedDate(),
@@ -53,3 +53,5 @@ public class PostCommentDto {
 	}
 	
 }
+
+

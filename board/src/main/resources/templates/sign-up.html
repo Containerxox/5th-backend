@@ -5,10 +5,7 @@
   <title>Sign Up</title>
 </head>
 <body>
-  <header>
-    Header
-    <hr>
-  </header>
+  <th:block th:replace="/layout/header :: headerLayout"></th:block>
 
   <form>
     <label for="uid">UserId</label>
@@ -22,10 +19,7 @@
     <button type="submit">SignUp</button>
   </form>
 
-  <footer>
-    <hr>
-    Footer
-  </footer>
+  <th:block th:replace="/layout/footer :: footerLayout"></th:block>
 
 </body>
 </html>
