@@ -40,8 +40,8 @@ public class PostService {
     	postRepository.save(post);
     }
 	
-    public void updatePost(Long pid, PostDto postDto) {
-
+    public void updatePost(Long pid, PostDto postDto){
+    	
     }
 	
     public void deletePost(long pid, String uid) {

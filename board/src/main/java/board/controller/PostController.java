@@ -36,7 +36,7 @@ public class PostController {
 	
 	@GetMapping("/form")
 	public String postFormPage() {
-		return "posts/post-form";
+		return "/posts/post-form";
 	}
 	
 	
@@ -47,8 +47,21 @@ public class PostController {
 		PostDto post= postService.getPost(pid);
 		map.addAttribute("post", post);
 		
-		return "posts/post-detail";
+		return "/posts/post-detail";
 	}
+	
+	
+	// 4. post 정보 수정 요청 : get (posts/{포스트번호}/form)
+	@GetMapping("/{pid}/form")
+	public String updatePostFormPage(@PathVariable Long pid, ModelMap map) {
+		
+		PostDto post = postService.getPost(pid);
+		map.addAttribute("post", post);
+		
+		return "/posts/post-form";
+	}
+	
+	// 5. post Title 또는 Content 수정 기능 수행 : post (posts/{포스트번호}/form)
 	
 	
 	
@@ -68,6 +81,9 @@ public class PostController {
 		
 		return "redirect:/posts";
 	}
+	
+	
+
 	
 	
 	
