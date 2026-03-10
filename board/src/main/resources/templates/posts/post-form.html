@@ -15,41 +15,38 @@
 
   <div class="container">
     <header id="post-form-header" class="py-5 text-center">
-      <h1 ht:text="${post != null} ? 'Post Update' : 'Post Registration'">Post </h1>
+      <h1 th:text="${post != null} ? 'Post Update': 'Post Registration'">Post</h1>
     </header>
 
-    <form th:action="${post.id != null} ? @{/posts/{pid}/edit(pid=${post.id})} : @{/posts}" 
-    		method="post" id="post-form">
-   		<div class="row mb-3 justify-content-md-center">
-   			<label for="category" class="col-sm-2 col-lg-1 col-form-label text-sm-end">Category</label>
-   			<div class="col-sm-8 col-lg-9">
-		  		<select class="form-select" name="categoryType" aria-label="Default select example" id="category">
-					<option th:selected="${post == null}">Category</option>
-					<option value="FRONT" th:selected="${post != null and post.categoryType?.name() == 'FRONT'}">FRONT</option>
-					<option value="WEB" th:selected="${post != null and post.categoryType?.name() == 'WEB'}">WEB</option>
-					<option value="BACKEND" th:selected="${post != null and post.categoryType?.name() == 'BACKEND'}">BACKEND</option>
-		  		</select>
-	  		</div>
-		</div>
+    <form th:action="${post != null}? @{/posts/{pid}/edit (pid=${post?.id})} : @{/posts}" method="POST" id="post-form">
+	  <div class="row mb-3 justify-content-md-center">
+	    <label for="category" class="col-sm-2 col-lg-1 col-form-label text-sm-end">Category</label>
+	    <div class="col-sm-8 col-lg-9">
+		    <select class="form-select" name="categoryType" aria-label="Default select example" id="category">
+			  <option th:selected="${post == null}">Category</option>
+			  <option value="FRONT" th:selected="${post != null and post.categoryType?.name() == 'FRONT'}">FRONT</option>
+			  <option value="WEB" th:selected="${post != null and post.categoryType?.name() == 'WEB'}">WEB</option>
+			  <option value="BACKEND" th:selected="${post != null and post.categoryType?.name() == 'BACKEND'}">BACKEND</option>
+		    </select>
+	    </div>
+	  </div>
       <div class="row mb-3 justify-content-md-center">
         <label for="title" class="col-sm-2 col-lg-1 col-form-label text-sm-end">Title</label>
         <div class="col-sm-8 col-lg-9">
-          <input type="text" class="form-control" id="title" name="title" required 
-          		th:value="${post.title}">
+          <input type="text" class="form-control" id="title" name="title" th:value="${post?.title}" required>
         </div>
       </div>
       <div class="row mb-3 justify-content-md-center">
-        <label for="content" class="col-sm-2 col-lg-1 col-form-label text-sm-end" >Contents</label>
+        <label for="content" class="col-sm-2 col-lg-1 col-form-label text-sm-end">Contents</label>
         <div class="col-sm-8 col-lg-9">
-          <textarea class="form-control" id"content" name="content" rows="5" required 
-          			th:text="${post.content}"></textarea>
+          <textarea class="form-control" id="content" name="content" rows="5" th:text="${post?.content}" required></textarea>
         </div>
       </div>
       <div class="row mb-5 justify-content-md-center">
         <div class="col-sm-10 d-grid gap-2 d-sm-flex justify-content-sm-end">
-          <button type="submit" class="btn btn-primary" id="submit-button" 
-          			th:text="${post != null} ? 'Modify' : 'Register'">Register</button>
-          <button type="button" class="btn btn-secondary" id="cancel-button">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submit-button"
+          		  th:text="${post != null}? 'Modify' : 'Register'">Register</button>
+          <button type="button" class="btn btn-secondary" id="cancel-button" onclick="history.back()">Cancel</button>
         </div>
       </div>
     </form>
