@@ -1,6 +1,6 @@
 package board.entity;
 
-import org.springframework.data.domain.Persistable;
+
 
 import board.entity.constant.UserRoleType;
 import jakarta.persistence.Column;
@@ -8,16 +8,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import jakarta.persistence.PostLoad;
-import jakarta.persistence.PostPersist;
-import jakarta.persistence.Transient;
+
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString(callSuper = true)
 @Entity
-public class User extends AuditingFields implements Persistable<String>{
+public class User extends AuditingFields{
 	
 	@Id
 	@Column(name = "uid", length = 20)
@@ -35,8 +33,7 @@ public class User extends AuditingFields implements Persistable<String>{
 	@Column(name = "role_type", columnDefinition = "VARCHAR(50)")
     private UserRoleType userRoleType;
     
-    @Transient
-    private boolean isNew = true;
+
     
     protected User() {}
     
@@ -52,14 +49,6 @@ public class User extends AuditingFields implements Persistable<String>{
 		return new User(userId, username, password, email, userRoleType);
 	}
 
-	@Override
-	public String getId() { return uid; }
 
-	@Override
-	public boolean isNew() { return isNew; }
-	
-	@PostPersist
-	@PostLoad
-	void markNotNew() { this.isNew = false; }
 	
 }
