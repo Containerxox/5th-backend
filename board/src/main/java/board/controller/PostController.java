@@ -99,11 +99,10 @@ public class PostController {
 	
 	// 6. post 삭제 요청 및 수행 : post (posts/{포스트번호}/delete)
 	@PostMapping("/{pid}/delete")
-	public String deletePost(@PathVariable Long pid, PostDto postDto) {
+	public String deletePost(@PathVariable Long pid) {
 		
-		String uid = postService.getPost(pid).getUserDto().getUid();
-		
-		postService.deletePost(pid, uid);
+		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN);
+		postService.deletePost(pid, userDto.getUid());
 		
 		return "redirect:/posts";
 	}

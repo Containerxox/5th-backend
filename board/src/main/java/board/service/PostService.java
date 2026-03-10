@@ -50,10 +50,16 @@ public class PostService {
 
     }
 	
+	@Transactional
     public void deletePost(long pid, String uid) {
-    	postRepository.deleteById(pid);
+    	
+		// post가 존재 + post 작성자만이 삭제 가능하게 해야 해
+		postRepository.deleteByIdAndUser_Uid(pid,uid);
+    	
     }
 
+	
+	@Transactional
 	public List<PostDto> getPosts() {
 		return postRepository.findAll().stream()
 										.map(PostDto::from)

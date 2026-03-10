@@ -8,4 +8,6 @@ import board.entity.Post;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long>{
 
+	void deleteByIdAndUser_Uid(long pid, String uid);
+
 }
