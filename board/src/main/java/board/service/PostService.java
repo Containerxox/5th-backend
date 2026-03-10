@@ -40,12 +40,18 @@ public class PostService {
     	postRepository.save(post);
     }
 	
+	@Transactional
     public void updatePost(Long pid, PostDto postDto){
-    	
+    	Post post = postRepository.getReferenceById(pid);
+
+        post.updateTitleAndContentAndCategoryType(postDto.getTitle(), 
+									        		postDto.getContent(), 
+									        		postDto.getCategoryType());
+
     }
 	
     public void deletePost(long pid, String uid) {
-
+    	postRepository.deleteById(pid);
     }
 
 	public List<PostDto> getPosts() {

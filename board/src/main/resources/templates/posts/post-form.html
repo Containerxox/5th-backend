@@ -18,15 +18,16 @@
       <h1 ht:text="${post != null} ? 'Post Update' : 'Post Registration'">Post </h1>
     </header>
 
-    <form th:action="@{/posts}" method="post" id="post-form">
+    <form th:action="${post.id != null} ? @{/posts/{pid}/edit(pid=${post.id})} : @{/posts}" 
+    		method="post" id="post-form">
    		<div class="row mb-3 justify-content-md-center">
    			<label for="category" class="col-sm-2 col-lg-1 col-form-label text-sm-end">Category</label>
    			<div class="col-sm-8 col-lg-9">
 		  		<select class="form-select" name="categoryType" aria-label="Default select example" id="category">
 					<option th:selected="${post == null}">Category</option>
-					<option value="FRONT" th:selected="${post != null and post.categoryType.name() == 'FRONT'}">FRONT</option>
-					<option value="WEB" th:selected="${post != null and post.categoryType.name() == 'WEB'}">WEB</option>
-					<option value="BACKEND" th:selected="${post != null and post.categoryType.name() == 'BACKEND'}">BACKEND</option>
+					<option value="FRONT" th:selected="${post != null and post.categoryType?.name() == 'FRONT'}">FRONT</option>
+					<option value="WEB" th:selected="${post != null and post.categoryType?.name() == 'WEB'}">WEB</option>
+					<option value="BACKEND" th:selected="${post != null and post.categoryType?.name() == 'BACKEND'}">BACKEND</option>
 		  		</select>
 	  		</div>
 		</div>
