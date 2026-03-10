@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import board.dto.PostCommentDto;
 import board.dto.PostDto;
 import board.dto.UserDto;
+import board.dto.response.PostWithCommentsResponse;
 import board.entity.Post;
 import board.entity.constant.CategoryType;
 import board.entity.constant.UserRoleType;
@@ -43,7 +44,10 @@ public class PostController {
 	@GetMapping("/{pid}")
 	public String getPost(@PathVariable Long pid, ModelMap map) {
 	
-//		PostCommentDto.postService.getPostWithComments(pid);
+		PostWithCommentsResponse post = PostWithCommentsResponse.from(postService.getPostWithComments(pid));
+		map.addAttribute("post",post);
+		map.addAttribute("comments",post.getPostCommentResponse());
+		
 		
 		// v1
 //		PostDto post= postService.getPost(pid);
