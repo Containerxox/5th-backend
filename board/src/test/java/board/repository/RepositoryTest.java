@@ -59,14 +59,15 @@ class RepositoryTest {
 	
 	@DisplayName("Repository Dummy 데이터")
 	@Rollback(false)
+//	@Disabled
 	@Test
 	void setDummies() throws InterruptedException {
-		User admin = User.of("admin", 
-							 "admin", 
-							 "admin", 
-							 "admin@board.com", 
-							 UserRoleType.ROLE_ADMIN);
-		userRepository.save(admin);
+//		User admin = User.of("admin", 
+//							 "admin", 
+//							 "admin", 
+//							 "admin@board.com", 
+//							 UserRoleType.ROLE_ADMIN);
+//		userRepository.save(admin);
 
 		List<User> users = IntStream.rangeClosed(1, 10)
 										.mapToObj(i -> User.of("user"+i, 
