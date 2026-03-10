@@ -50,10 +50,11 @@
     <div class="row g-5">
       <section>
         <form class="row g-3 comment-form" th:action="@{/comments}" method="POST">
-          <input type="hidden" class="post-id">
-          <div class="col-md-9 col-lg-8">
+          <input type="hidden" class="post-id" id="pid" name="pid" th:value="${post?.id}">
+          <div class="col-md-9 col-lg-8"> 
             <label for="comment-textbox" hidden>Comment</label>
-            <textarea class="form-control comment-textbox" id="comment-textbox" placeholder="Comment Content" rows="3" required></textarea>
+            <textarea class="form-control comment-textbox" id="comment-textbox" placeholder="Comment Content" rows="3" required
+            name="content"></textarea>
           </div>
           <div class="col-md-3 col-lg-4">
             <label for="comment-submit" hidden>Comment Registration</label>
