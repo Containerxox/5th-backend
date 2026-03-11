@@ -14,9 +14,9 @@ public class UserService {
 	
 	private final UserRepository userRepository;
 
-	public Optional<UserDto> getUser(String username) { 
+	public Optional<UserDto> getUser(String uid) { 
 		
-		return userRepository.findById(username)
+		return userRepository.findById(uid)
 								.map(UserDto::from);
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import board.dto.UserDto;
 import board.dto.request.SearchRequest;
 import board.dto.response.PostResponse;
 import board.dto.response.PostWithCommentsResponse;
+import board.dto.security.BoardDetails;
 import board.entity.constant.UserRoleType;
 import board.service.PagingService;
 import board.service.PostService;
@@ -116,14 +118,15 @@ public class PostController {
 	
 	@PostMapping
 	public String registerPost(
-			PostDto postDto
+			PostDto postDto,
+			@AuthenticationPrincipal BoardDetails boardDetails
 	) {
 		// 로그인 가정
-		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN);
+//		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN);
 		postService.registerPost(PostDto.of(postDto.getTitle(), 
 											postDto.getContent(), 
 											postDto.getCategoryType(), 
-											userDto));
+											boardDetails.toDto()));
 		
 		return "redirect:/posts";
 	}

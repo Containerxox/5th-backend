@@ -64,7 +64,7 @@ public class BoardDetails implements UserDetails{
 
 	@Override
 	public String getUsername() {
-		return username;
+		return uid;
 	}
 
 }

@@ -19,7 +19,7 @@
     <div class="row g-5">
       <section class="col-md-3 col-lg-4 order-md-last">
         <aside>
-          <p><a id="created-by" th:text="${post?.createdBy}">Admin Email</a></p>
+          <p><a id="created-by" th:text="${post?.uid}">Admin Email</a></p>
           <p><time id="created-date" datetime="2026-03-09T00:00:00" th:text="${#temporals.format(post.createdDate,'yyyy-MM-dd HH:mm')}">2026-03-09</time></p>
           <p><span id="category" class="badge text-bg-secondary mx-1"><a class="text-reset" th:text="${post.categoryType}">WEB</a></span></p>
         </aside>
@@ -39,8 +39,10 @@
       <form id="delete-post-form" th:action="@{/posts/{pid}/delete(pid=${post.id})}" method="post">
         <div class="pb-5 d-grid gap-2 d-md-block">
           <a class="btn btn-success me-md-2" role="button" id="update-post" 
-          		th:href="@{/posts/{pid}/form(pid=${post?.id})}">Edit</a>
-    		<button class="btn btn-danger me-md-2" type="submit">Delete</button>
+          		th:href="@{/posts/{pid}/form(pid=${post?.id})}"
+          		th:if="${#authorization.expression('isAuthenticated()')} and ${post?.uid} == ${#authentication.name}">Edit</a>
+    		<button class="btn btn-danger me-md-2" type="submit"
+    				th:if="${#authorization.expression('isAuthenticated()')} and ${post?.uid} == ${#authentication.name}">Delete</button>
         </div>
       </form>
     </div>
@@ -75,7 +77,8 @@
                   <p class="mb-1" th:text="${comment?.content}"></p>
                 </div>
                 <div class="col-2 mb-3 align-self-center">
-                  <button type="submit" class="btn btn-outline-danger">DELETE</button>
+                  <button type="submit" class="btn btn-outline-danger"
+                  th:if="${#authorization.expression('isAuthenticated()')} and ${comment?.uid} == ${#authentication.name}">DELETE</button>
                 </div>
               </div>
             </form>
