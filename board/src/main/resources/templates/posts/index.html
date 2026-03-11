@@ -80,7 +80,10 @@
           <li class="page-item"
               th:classappend="${posts?.hasPrevious()? '' : 'disabled'}">
           	<a class="page-link" 
-          	   th:href="@{/posts(page=${currentPage - 1})}">Previous
+          	   th:href="@{/posts(page=${currentPage - 1},
+          	   					searchType=${param.searchType},
+                   				 searchValue=${param.searchValue})}"
+              >Previous
           	</a>
           </li>
           
@@ -88,7 +91,9 @@
               th:classappend="${pagingNumber == currentPage}? 'active': ''"
           	  th:each="pagingNumber : ${pagingNumbers}">
           	<a class="page-link" 
-          	   th:href="@{/posts(page=${pagingNumber})}"
+          	   th:href="@{/posts(page=${pagingNumber},
+                    searchType=${param.searchType},
+                    searchValue=${param.searchValue})}"
           	   th:text="${pagingNumber}"
           	>1
           	</a>
@@ -97,7 +102,10 @@
           <li class="page-item"
           	  th:classappend="${posts?.hasNext()? '' : 'disabled'}">
           	<a class="page-link" 
-          	   th:href="@{/posts(page=${currentPage + 1})}">Next
+          	   th:href="@{/posts(page=${currentPage + 1},
+          	   					searchType=${param.searchType},
+                    			searchValue=${param.searchValue})}"
+            >Next
           	</a>
           </li>
         </ul>

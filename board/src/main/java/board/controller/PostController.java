@@ -38,10 +38,10 @@ public class PostController {
 			ModelMap map) {
 		
 		// http://localhost:8080?size=10
-		System.out.println("---------");
-		System.out.println(searchRequest);
-		System.out.println("searchType : " + searchRequest.getSearchType());
-		System.out.println("searchValue : " + searchRequest.getSearchValue());
+//		System.out.println("---------");
+//		System.out.println(searchRequest);
+//		System.out.println("searchType : " + searchRequest.getSearchType());
+//		System.out.println("searchValue : " + searchRequest.getSearchValue());
 		
 		
 		// v4
