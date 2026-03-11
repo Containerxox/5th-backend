@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import board.dto.PostDto;
 import board.dto.UserDto;
+import board.dto.request.SearchRequest;
 import board.dto.response.PostResponse;
 import board.dto.response.PostWithCommentsResponse;
 import board.entity.constant.UserRoleType;
@@ -33,29 +34,37 @@ public class PostController {
 	@GetMapping
 	public String getPosts(
 			@PageableDefault(size = 10) Pageable pageable,
-			@RequestParam String searchType, String searchValue,
+			SearchRequest searchRequest,
 			ModelMap map) {
 		
 		// http://localhost:8080?size=10
 		System.out.println("---------");
-		System.out.println(searchType);
-		System.out.println(searchValue);
+		System.out.println(searchRequest);
+		System.out.println("searchType : " + searchRequest.getSearchType());
+		System.out.println("searchValue : " + searchRequest.getSearchValue());
 		
-		List<PostResponse> posts = postService.getPostsWithSearch(searchType, searchValue)
-												.stream()
-												.map(PostResponse::from)
-												.toList(); 
+		
+		// v4
+		Page<PostResponse> posts = postService.getPostWithSearchAndPage(searchRequest, pageable)
+												.map(PostResponse::from);
+		
+		
+		
+//		List<PostResponse> posts = postService.getPostsWithSearch(searchRequest)
+//												.stream()
+//												.map(PostResponse::from)
+//												.toList(); 
 		
 		// v3
 //		Page<PostResponse> posts = postService.getPostsWithPage(pageable)
 //													.map(PostResponse::from);
 		
-//		List<Integer> pagingNumbers = pagingService.getPagingNumbers(pageable.getPageNumber() + 1, 
-//																		posts.getTotalPages());
+		List<Integer> pagingNumbers = pagingService.getPagingNumbers(pageable.getPageNumber() + 1, 
+																		posts.getTotalPages());
 		
 		map.addAttribute("posts", posts);
-//		map.addAttribute("pagingNumbers", pagingNumbers);
-//		map.addAttribute("currentPage", pageable.getPageNumber()+1);
+		map.addAttribute("pagingNumbers", pagingNumbers);
+		map.addAttribute("currentPage", pageable.getPageNumber()+1);
 		
 //		System.out.println("---");
 //		System.out.println(posts);

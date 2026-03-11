@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import board.dto.PostDto;
 import board.dto.PostWithCommentsDto;
+import board.dto.request.SearchRequest;
 import board.dto.response.PostResponse;
 import board.entity.Post;
 import board.entity.User;
@@ -88,31 +89,44 @@ public class PostService {
 
     
     @Transactional
-	public List<PostDto> getPostsWithSearch(String searchType, String searchValue) {
+	public List<PostDto> getPostsWithSearch(SearchRequest searchRequest) {
 		
     	// searchType, searchValue
     	// isBlank() -공백/탭/개행 등의 의미없는 문자 체크
     	// isEmpty() - 길이가 0인지 체크
-    	if(searchType == null || searchType.isBlank() ||
-    	    	   searchValue == null || searchType.isBlank()) {
+    	if(!searchRequest.hasSearch()) {
     	    		return postRepository.findAll().stream()
     	    									.map(PostDto::from)
     	    									.toList();
     	    	}
 
     	// 검색 타입, 값 일치하는 부분을 리턴
-    	return switch (searchType) {
-				case "title" -> postRepository.findByTitleContains(searchValue)
-												.stream()
-												.map(PostDto::from).toList();
-				case "content" -> postRepository.findByContentContains(searchValue)
-													.stream()
-													.map(PostDto::from).toList();
-				case "uid" -> postRepository.findByUser_UidContains(searchValue)
-											.stream()
-											.map(PostDto::from).toList();
-											
-				default -> throw new IllegalArgumentException("Unexpected value:" + searchType);
+    	return switch (searchRequest.getSearchType()) {
+				case "title" -> postRepository.findByTitleContains(searchRequest.getSearchValue()).stream().map(PostDto::from).toList();
+				case "content" -> postRepository.findByContentContains(searchRequest.getSearchValue()).stream().map(PostDto::from).toList();
+				case "uid" -> postRepository.findByUser_UidContains(searchRequest.getSearchValue()).stream().map(PostDto::from).toList();
+													
+				default -> throw new IllegalArgumentException("Unexpected value: " + searchRequest.getSearchType());
+    	};
+	}
+
+	public Page<PostDto> getPostWithSearchAndPage(SearchRequest searchRequest, Pageable pageable) {
+		
+    	// searchType, searchValue
+    	// isBlank() -공백/탭/개행 등의 의미없는 문자 체크
+    	// isEmpty() - 길이가 0인지 체크
+    	if(!searchRequest.hasSearch()) {
+    	    		return postRepository.findAll(pageable)
+    	    									.map(PostDto::from);
+    	    	}
+
+    	// 검색 타입, 값 일치하는 부분을 리턴
+    	return switch (searchRequest.getSearchType()) {
+				case "title" -> postRepository.findByTitleContains(searchRequest.getSearchValue(), pageable).map(PostDto::from);
+				case "content" -> postRepository.findByContentContains(searchRequest.getSearchValue(), pageable).map(PostDto::from);
+				case "uid" -> postRepository.findByUser_UidContains(searchRequest.getSearchValue(), pageable).map(PostDto::from);
+													
+				default -> throw new IllegalArgumentException("Unexpected value: " + searchRequest.getSearchType());
     	};
 	}
     
