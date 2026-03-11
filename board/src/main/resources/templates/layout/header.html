@@ -15,11 +15,17 @@
 
         <div class="text-end">
           <span id="username" class="text-white me-2"
+	          sec:authorize="isAuthenticated()"
+	          sec:authentication="principal.username"
           >username</span>
           <a role="button" id="login" class="btn btn-outline-light me-2"
+          	th:href="@{/login}"
+          	sec:authorize="!isAuthenticated()"
           	>Login
           	</a>
           <a role="button" id="logout" class="btn btn-outline-light me-2"
+          	th:href="@{/logout}"
+          	sec:authorize="isAuthenticated()"
           >Logout</a>
         </div>
       </div>

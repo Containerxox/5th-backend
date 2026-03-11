@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+   		xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -30,7 +31,8 @@
                   </div>
                   <div class="col-lg-8 col-md-6 col-sm-12 p-0">
                     <label for="search-value" hidden>Search</label>
-                    <input type="text" placeholder="Search Keyword..." class="form-control" id="search-value" name="searchValue">
+                    <input type="text" placeholder="Search Keyword..." class="form-control" id="search-value" name="searchValue"
+                    th:value="${param?.searchValue}">
                   </div>
                   <div class="col-lg-1 col-md-3 col-sm-12 p-0">
                     <button type="submit" class="btn btn-base">
