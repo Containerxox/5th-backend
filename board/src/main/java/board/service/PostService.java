@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import board.dto.PostDto;
 import board.dto.PostWithCommentsDto;
+import board.dto.response.PostResponse;
 import board.entity.Post;
 import board.entity.User;
 import board.repository.PostRepository;
@@ -83,6 +84,36 @@ public class PostService {
 	public Page<PostDto> getPostsWithPage(Pageable pageable) { // 게시글을 페이지 단위로 조회해서 PostDto로 변환 후 반환
     	return postRepository.findAll(pageable)
     							.map(PostDto::from);
+	}
+
+    
+    @Transactional
+	public List<PostDto> getPostsWithSearch(String searchType, String searchValue) {
+		
+    	// searchType, searchValue
+    	// isBlank() -공백/탭/개행 등의 의미없는 문자 체크
+    	// isEmpty() - 길이가 0인지 체크
+    	if(searchType == null || searchType.isBlank() ||
+    	    	   searchValue == null || searchType.isBlank()) {
+    	    		return postRepository.findAll().stream()
+    	    									.map(PostDto::from)
+    	    									.toList();
+    	    	}
+
+    	// 검색 타입, 값 일치하는 부분을 리턴
+    	return switch (searchType) {
+				case "title" -> postRepository.findByTitleContains(searchValue)
+												.stream()
+												.map(PostDto::from).toList();
+				case "content" -> postRepository.findByContentContains(searchValue)
+													.stream()
+													.map(PostDto::from).toList();
+				case "uid" -> postRepository.findByUser_UidContains(searchValue)
+											.stream()
+											.map(PostDto::from).toList();
+											
+				default -> throw new IllegalArgumentException("Unexpected value:" + searchType);
+    	};
 	}
     
     /*

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import board.dto.PostDto;
 import board.dto.UserDto;
@@ -31,22 +32,36 @@ public class PostController {
 	
 	@GetMapping
 	public String getPosts(
-			@PageableDefault(page = 0, size = 10) Pageable pageable,
+			@PageableDefault(size = 10) Pageable pageable,
+			@RequestParam String searchType, String searchValue,
 			ModelMap map) {
 		
-		// http://localhost:8080?page=0&size=10
+		// http://localhost:8080?size=10
+		System.out.println("---------");
+		System.out.println(searchType);
+		System.out.println(searchValue);
+		
+		List<PostResponse> posts = postService.getPostsWithSearch(searchType, searchValue)
+												.stream()
+												.map(PostResponse::from)
+												.toList(); 
 		
 		// v3
-		Page<PostResponse> posts = postService.getPostsWithPage(pageable)
-													.map(PostResponse::from);
+//		Page<PostResponse> posts = postService.getPostsWithPage(pageable)
+//													.map(PostResponse::from);
 		
-		List<Integer> pagingNumbers = pagingService.getPagingNumbers(pageable.getPageNumber(), posts.getTotalPages());
+//		List<Integer> pagingNumbers = pagingService.getPagingNumbers(pageable.getPageNumber() + 1, 
+//																		posts.getTotalPages());
 		
 		map.addAttribute("posts", posts);
-		map.addAttribute("pagingNumbers", pagingNumbers);
+//		map.addAttribute("pagingNumbers", pagingNumbers);
+//		map.addAttribute("currentPage", pageable.getPageNumber()+1);
 		
-		System.out.println("---");
-		System.out.println(posts.getNumber());
+//		System.out.println("---");
+//		System.out.println(posts);
+//		System.out.println(posts.hasPrevious());
+//		System.out.println(posts.hasNext());
+		
 		
 		// v2
 //		List<PostResponse> posts = postService.getPosts().stream()

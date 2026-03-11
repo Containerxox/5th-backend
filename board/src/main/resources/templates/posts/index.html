@@ -8,10 +8,45 @@
 </head>
 
 <body>
- 	<th:block th:replace="/layout/header :: headerLayout"></th:block>
+
+  <th:block th:replace="/layout/header :: headerLayout"></th:block>
 
   <main class="container">
-
+    <div class="row">
+      <div class="card card-margin search-form my-3">
+        <div class="card-body p-0">
+          <form id="search-form" th:action="@{/posts}" method="GET">
+            <div class="row">
+              <div class="col-12">
+                <div class="row no-gutters">
+                  <div class="col-lg-3 col-md-3 col-sm-12 p-0">
+                    <label for="search-type" hidden>Search Type</label>
+                    <select class="form-control" id="search-type" name="searchType">
+					  <option selected disabled>Search Type</option>
+                      <option value="title">Title</option>
+                      <option value="content">Content</option>
+                      <option value="uid">ID</option>
+                    </select>
+                  </div>
+                  <div class="col-lg-8 col-md-6 col-sm-12 p-0">
+                    <label for="search-value" hidden>Search</label>
+                    <input type="text" placeholder="Search Keyword..." class="form-control" id="search-value" name="searchValue">
+                  </div>
+                  <div class="col-lg-1 col-md-3 col-sm-12 p-0">
+                    <button type="submit" class="btn btn-base">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <table class="table" id="post-table">
         <thead>
@@ -24,7 +59,7 @@
         </thead>
         <tbody>
         <tr th:each="post : ${posts}">
-          <td class="title"><a th:text="${post?.title}" th:href="@{/posts/{pid}(pid=${post?.id})}">Title</a></td>
+          <td class="title"><a th:text="${post?.title}" th:href="@{/posts/{pid} (pid=${post?.id})}">Title</a></td>
           <td class="category"><span class="badge text-bg-secondary mx-1" th:text="${post?.categoryType}">Category</span></td>
           <td class="uid" th:text="${post?.createdBy}">Admin</td>
           <td class="created-date" th:text="${#temporals.format(post?.createdDate, 'yyyy-MM-dd HH:mm:ss')}">2026-03-09</td>
@@ -39,23 +74,36 @@
       </div>
     </div>
 
-    <div class="row">
+<!--    <div class="row">
       <nav id="pagination" aria-label="Page navigation">
         <ul class="pagination justify-content-center">
-          <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-          <li class="page-item" th:each="pagingNumber : ${pagingNumbers}">
-          	<a class="page-link"
-          		th:classappend="${pagingNumber == posts.number} ? 'active' : ''" 
-          		href="#"
-          		th:text="${pagingNumber+1}"
-          		>1
+          <li class="page-item"
+              th:classappend="${posts?.hasPrevious()? '' : 'disabled'}">
+          	<a class="page-link" 
+          	   th:href="@{/posts(page=${currentPage - 1})}">Previous
           	</a>
           </li>
-          <li class="page-item"><a class="page-link" href="#">Next</a></li>
+          
+          <li class="page-item"
+              th:classappend="${pagingNumber == currentPage}? 'active': ''"
+          	  th:each="pagingNumber : ${pagingNumbers}">
+          	<a class="page-link" 
+          	   th:href="@{/posts(page=${pagingNumber})}"
+          	   th:text="${pagingNumber}"
+          	>1
+          	</a>
+          </li>
+          
+          <li class="page-item"
+          	  th:classappend="${posts?.hasNext()? '' : 'disabled'}">
+          	<a class="page-link" 
+          	   th:href="@{/posts(page=${currentPage + 1})}">Next
+          	</a>
+          </li>
         </ul>
       </nav>
     </div>
-  </main>
+ -->  </main>
 
   <th:block th:replace="/layout/footer :: footerLayout"></th:block>
 
