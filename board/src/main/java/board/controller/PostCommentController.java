@@ -26,8 +26,8 @@ public class PostCommentController {
 	@PostMapping
 	public String registerNewPostComment(PostCommentRequest postCommentRequest) {
 
-		System.out.println("-------");
-		System.out.println(postCommentRequest);
+//		System.out.println("-------");
+//		System.out.println(postCommentRequest);
 		
 		// 로그인 되었다고 가정하고 진행
 		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN);

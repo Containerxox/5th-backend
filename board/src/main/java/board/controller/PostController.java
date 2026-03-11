@@ -2,21 +2,22 @@ package board.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import board.dto.PostCommentDto;
 import board.dto.PostDto;
 import board.dto.UserDto;
+import board.dto.response.PostResponse;
 import board.dto.response.PostWithCommentsResponse;
-import board.entity.Post;
-import board.entity.constant.CategoryType;
 import board.entity.constant.UserRoleType;
+import board.service.PagingService;
 import board.service.PostService;
 import lombok.RequiredArgsConstructor;
 
@@ -26,13 +27,52 @@ import lombok.RequiredArgsConstructor;
 public class PostController {
 	
 	private final PostService postService;
+	private final PagingService pagingService;
 	
 	@GetMapping
-	public String getPosts(ModelMap map) {
-		List<PostDto> posts = postService.getPosts();
-		map.addAttribute("posts", posts);
+	public String getPosts(
+			@PageableDefault(page = 0, size = 10) Pageable pageable,
+			ModelMap map) {
 		
-		return "posts/index";
+		// http://localhost:8080?page=0&size=10
+		
+		// v3
+		Page<PostResponse> posts = postService.getPostsWithPage(pageable)
+													.map(PostResponse::from);
+		
+		List<Integer> pagingNumbers = pagingService.getPagingNumbers(pageable.getPageNumber(), posts.getTotalPages());
+		
+		map.addAttribute("posts", posts);
+		map.addAttribute("pagingNumbers", pagingNumbers);
+		
+		System.out.println("---");
+		System.out.println(posts.getNumber());
+		
+		// v2
+//		List<PostResponse> posts = postService.getPosts().stream()
+//														.map(PostResponse::from)
+//														.toList();
+		
+		// v1
+//		List<PostDto> posts = postService.getPosts();
+//		map.addAttribute("posts", posts);
+		
+		return "/posts/index";
+	}
+	
+	@GetMapping("/{pid}")
+	public String getPost(@PathVariable Long pid,
+							ModelMap map) {
+		
+		PostWithCommentsResponse post = PostWithCommentsResponse.from(postService.getPostWithComments(pid));
+		map.addAttribute("post", post);
+		map.addAttribute("comments", post.getPostCommentResponse());
+		
+		// v1
+//		PostDto post = postService.getPost(pid);
+//		map.addAttribute("post", post);
+		
+		return "/posts/post-detail";
 	}
 	
 	@GetMapping("/form")
@@ -40,44 +80,22 @@ public class PostController {
 		return "/posts/post-form";
 	}
 	
-	
-	@GetMapping("/{pid}")
-	public String getPost(@PathVariable Long pid, ModelMap map) {
-	
-		PostWithCommentsResponse post = PostWithCommentsResponse.from(postService.getPostWithComments(pid));
-		map.addAttribute("post",post);
-		map.addAttribute("comments",post.getPostCommentResponse());
-		
-		
-		// v1
-//		PostDto post= postService.getPost(pid);
-//		map.addAttribute("post", post);
-		
-		return "/posts/post-detail";
-	}
-	
-	
-	// 4. post 정보 수정 요청 : get (posts/{포스트번호}/form)
 	@GetMapping("/{pid}/form")
-	public String updatePostFormPage(@PathVariable Long pid, ModelMap map) {
+	public String updatePostFormPage(@PathVariable Long pid, 
+									 ModelMap model) {
 		
 		PostDto post = postService.getPost(pid);
-		map.addAttribute("post", post);
+		model.addAttribute("post", post);
 		
 		return "/posts/post-form";
 	}
-	
-	
 	
 	@PostMapping
 	public String registerPost(
 			PostDto postDto
 	) {
-//		System.out.println("-------");  // 확인용
-//		System.out.println(postDto);
-		
-		// 로그인 되었다고 가정하고 진행
-		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN); //게시글 작성하는 작성자의 정보
+		// 로그인 가정
+		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN);
 		postService.registerPost(PostDto.of(postDto.getTitle(), 
 											postDto.getContent(), 
 											postDto.getCategoryType(), 
@@ -86,37 +104,31 @@ public class PostController {
 		return "redirect:/posts";
 	}
 	
-	
-	// 5. post Title 또는 Content 수정 기능 수행 : post (posts/{포스트번호}/edit)
 	@PostMapping("/{pid}/edit")
-	public String updatePost(@PathVariable Long pid, PostDto postDto) {
-		
-		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN); //게시글 작성하는 작성자의 정보
+	public String updatePost(
+			@PathVariable Long pid,
+			PostDto postDto
+	) {
+		// 로그인 가정
+		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN);
 		postService.updatePost(pid, PostDto.of(postDto.getTitle(), 
-											postDto.getContent(), 
-											postDto.getCategoryType(), 
-											userDto));
+												postDto.getContent(), 
+												postDto.getCategoryType(), 
+												userDto));
 		
-
-	    
-	    return "redirect:/posts/" + pid;
+		return "redirect:/posts/" + pid;
 	}
+
 	
-	
-	// 6. post 삭제 요청 및 수행 : post (posts/{포스트번호}/delete)
 	@PostMapping("/{pid}/delete")
-	public String deletePost(@PathVariable Long pid) {
-		
+	public String deletePost(
+			@PathVariable Long pid
+	) {
+		// 로그인 가정
 		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN);
 		postService.deletePost(pid, userDto.getUid());
 		
 		return "redirect:/posts";
 	}
-	
-	
-
-	
-	
-	
 	
 }

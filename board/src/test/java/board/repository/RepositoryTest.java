@@ -58,8 +58,8 @@ class RepositoryTest {
 	
 	
 	@DisplayName("Repository Dummy 데이터")
-	@Rollback(false)
-//	@Disabled
+//	@Rollback(false)
+	@Disabled
 	@Test
 	void setDummies() throws InterruptedException {
 //		User admin = User.of("admin", 
