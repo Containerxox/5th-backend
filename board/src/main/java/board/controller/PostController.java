@@ -134,14 +134,15 @@ public class PostController {
 	@PostMapping("/{pid}/edit")
 	public String updatePost(
 			@PathVariable Long pid,
-			PostDto postDto
+			PostDto postDto,
+			@AuthenticationPrincipal BoardDetails boardDetails
 	) {
 		// 로그인 가정
-		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN);
+//		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN);
 		postService.updatePost(pid, PostDto.of(postDto.getTitle(), 
 												postDto.getContent(), 
 												postDto.getCategoryType(), 
-												userDto));
+												boardDetails.toDto()));
 		
 		return "redirect:/posts/" + pid;
 	}
@@ -149,11 +150,12 @@ public class PostController {
 	
 	@PostMapping("/{pid}/delete")
 	public String deletePost(
-			@PathVariable Long pid
+			@PathVariable Long pid,
+			@AuthenticationPrincipal BoardDetails boardDetails
 	) {
 		// 로그인 가정
-		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN);
-		postService.deletePost(pid, userDto.getUid());
+//		UserDto userDto = UserDto.of("admin", "admin", "admin@board.com", "admin", UserRoleType.ROLE_ADMIN);
+		postService.deletePost(pid, boardDetails.toDto().getUid());
 		
 		return "redirect:/posts";
 	}
