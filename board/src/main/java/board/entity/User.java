@@ -3,7 +3,7 @@ package board.entity;
 
 
 import board.entity.constant.UserRoleType;
-import board.util.UserRoleTypeConverter;
+//import board.util.UserRoleTypeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -31,8 +31,8 @@ public class User extends AuditingFields{
 
     private String email;
     
-//    @Enumerated(EnumType.STRING)
-	@Convert(converter = UserRoleTypeConverter.class)
+//	@Convert(converter = UserRoleTypeConverter.class)
+    @Enumerated(EnumType.STRING)
 	@Column(name = "role_type", columnDefinition = "VARCHAR(50)")
     private UserRoleType userRoleType;
     

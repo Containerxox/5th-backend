@@ -19,12 +19,12 @@ public enum UserRoleType {
 	}
 
 	// db 문자열값 -> java enum 상수명	
-	public static UserRoleType getInstance(String dbData) {
-		return Arrays.stream(UserRoleType.values())
-						.filter(role -> role.getRoleType().equals(dbData))
-						.findFirst()
-						.orElseThrow();
-	}
+//	public static UserRoleType getInstance(String dbData) {
+//		return Arrays.stream(UserRoleType.values())
+//						.filter(role -> role.getRoleType().equals(dbData))
+//						.findFirst()
+//						.orElseThrow();
+//	}
 	
 	
 }
