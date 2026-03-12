@@ -31,7 +31,8 @@ public class AiPostService {
     											""";
     
     private static final String SUMMARY_PROMPT = """
-    													title과 content 값을 읽고 요약을 해줘.
+    													title과 content 값을 읽고 가장 핵심적인 부분을 3줄 이내로 요약해줘.
+														한국어로 응답해.
 														요약된 글만 응답하고 설명은 하지마.
 														
 														제목 : {title}
