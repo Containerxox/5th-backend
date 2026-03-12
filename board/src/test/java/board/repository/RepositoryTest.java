@@ -25,11 +25,12 @@ import board.entity.PostComment;
 import board.entity.User;
 import board.entity.constant.CategoryType;
 import board.entity.constant.UserRoleType;
+import board.util.UserRoleTypeConverter;
 
 @DisplayName("Repository 테스트")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Import(RepositoryTest.TestJPAConfig.class)
+@Import({RepositoryTest.TestJPAConfig.class, UserRoleTypeConverter.class})
 class RepositoryTest {
 	
 	private final UserRepository userRepository;
@@ -69,33 +70,53 @@ class RepositoryTest {
 //							 UserRoleType.ROLE_ADMIN);
 //		userRepository.save(admin);
 
-		List<User> users = IntStream.rangeClosed(1, 10)
-										.mapToObj(i -> User.of("user"+i, 
-																"user"+i, 
-																"user"+i, 
-																"user"+i + "@board.com", 
-																UserRoleType.ROLE_USER))
-										.collect(Collectors.toList());
-		userRepository.saveAllAndFlush(users);
-		List<CategoryType> categories = Arrays.asList((CategoryType.FRONT),
-														(CategoryType.WEB),
-														(CategoryType.BACKEND));
+//		List<User> users = IntStream.rangeClosed(1, 10)
+//										.mapToObj(i -> User.of("user"+i, 
+//																"user"+i, 
+//																"user"+i, 
+//																"user"+i + "@board.com", 
+//																UserRoleType.ROLE_USER))
+//										.collect(Collectors.toList());
+//		userRepository.saveAllAndFlush(users);
+//		List<CategoryType> categories = Arrays.asList((CategoryType.FRONT),
+//														(CategoryType.WEB),
+//														(CategoryType.BACKEND));
+//
+//		List<Post> posts = IntStream.rangeClosed(1, 200)
+//										.mapToObj(i -> Post.of("title"+i, 
+//															   "post content : "+i, 
+//															   categories.get(i%categories.size()), 
+//															   users.get((i-1)%users.size())))
+//										.collect(Collectors.toList());
+//		
+//		postRepository.saveAllAndFlush(posts);		
+//		List<PostComment> postComments = IntStream.rangeClosed(1, 600)
+//													.mapToObj(i -> PostComment.of("post comment : "+i, 
+//																				posts.get((i-1)%posts.size()), 
+//																				users.get((i-1)%users.size())))
+//													.collect(Collectors.toList());
+//		
+//		postCommentRepository.saveAllAndFlush(postComments);
+		
+	}
+	
+	@DisplayName("Repository Dummy Converted 데이터")
+	@Rollback(false)
+//	@Disabled
+	@Test
+	void setConvertedDummies() throws InterruptedException {
 
-		List<Post> posts = IntStream.rangeClosed(1, 200)
-										.mapToObj(i -> Post.of("title"+i, 
-															   "post content : "+i, 
-															   categories.get(i%categories.size()), 
-															   users.get((i-1)%users.size())))
-										.collect(Collectors.toList());
+//		List<User> users = IntStream.rangeClosed(11, 15)
+//										.mapToObj(i -> User.of("user"+i, 
+//																"user"+i, 
+//																"user"+i, 
+//																"user"+i + "@board.com", 
+//																UserRoleType.USER))
+//										.collect(Collectors.toList());
+//		userRepository.saveAllAndFlush(users);
 		
-		postRepository.saveAllAndFlush(posts);		
-		List<PostComment> postComments = IntStream.rangeClosed(1, 600)
-													.mapToObj(i -> PostComment.of("post comment : "+i, 
-																				posts.get((i-1)%posts.size()), 
-																				users.get((i-1)%users.size())))
-													.collect(Collectors.toList());
-		
-		postCommentRepository.saveAllAndFlush(postComments);
+		List<User> users = userRepository.findAll();
+		System.out.println(users);
 		
 	}
 	
@@ -106,5 +127,11 @@ class RepositoryTest {
 		AuditorAware<String> auditorAware() {
 			return () -> Optional.of("admin");
 		}
+		
+		@Bean
+		UserRoleTypeConverter userRoleTypeConverter() {
+			return new UserRoleTypeConverter();
+		}
+		
 	}
 }

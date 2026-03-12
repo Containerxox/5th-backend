@@ -53,6 +53,8 @@ public class BoardDetails implements UserDetails{
     @Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
     	Collection<GrantedAuthority> collection = new ArrayList<GrantedAuthority>();
+    	
+    	// if) USER, ADMIN -> ROLE_
     	collection.add(() -> userRoleType.getRoleType());
     	return collection;
 	}
