@@ -10,7 +10,7 @@ public class AiConfig {
 	@Bean
 	public ChatClient chatClient(ChatClient.Builder builder) {
 		return builder
-				.defaultSystem("당신은 친절한 Spring 전문가입니다.")
+//				.defaultSystem("당신은 친절한 Spring 전문가입니다.")
 				.build();
 	}
 	

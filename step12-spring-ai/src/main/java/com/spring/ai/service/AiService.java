@@ -6,6 +6,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.metadata.Usage;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.stereotype.Service;
@@ -43,11 +44,17 @@ public class AiService {
 							.getText();
     	
         // ④ 토큰 사용량 추출
-
+    	Usage usage = response.getMetadata().getUsage();
+    	Integer promptTokens = usage.getPromptTokens();
+    	Integer generationTokens = usage.getCompletionTokens();
+    	Integer totalTokens = usage.getTotalTokens();
 
         // ⑤ DTO 반환
     	return AiResponse.builder()
     					.answer(answer)
+    					.promptTokens(promptTokens)
+    					.generationTokens(generationTokens)
+    					.totalTokens(totalTokens)
     					.build();
     }
 }
