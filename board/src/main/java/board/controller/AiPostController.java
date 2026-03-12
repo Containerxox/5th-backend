@@ -37,6 +37,9 @@ public class AiPostController {
 	// POST /api/ai/correct
 	@PostMapping("/correct")
 	public ResponseEntity<String> correct(@RequestBody AiRequest request) {
-		return ResponseEntity.ok(null);
+		
+		String correctedContent = aiPostService.correctSpelling(request.getContent());
+		
+		return ResponseEntity.ok(correctedContent);
 	}
 }

@@ -40,7 +40,11 @@
         <label for="content" class="col-sm-2 col-lg-1 col-form-label text-sm-end">Contents</label>
         <div class="col-sm-8 col-lg-9">
           <textarea class="form-control" id="content" name="content" rows="5" th:text="${post?.content}" required></textarea>
+           <button type="button" class="btn btn-outline-secondary btn-sm mt-1" id="btn-correct">
+		        맞춤법 교정
+		    </button>
         </div>
+        
       </div>
       <div class="row mb-5 justify-content-md-center">
         <div class="col-sm-10 d-grid gap-2 d-sm-flex justify-content-sm-end">
@@ -79,11 +83,11 @@
 	        fetch('/api/ai/correct', {
 	            method: 'POST',
 	            headers: { 'Content-Type': 'application/json' },
-	            body: JSON.stringify()
+	            body: JSON.stringify({content})
 	        })
 	        .then(res => res.text())
 	        .then(corrected => {
-
+	        	document.getElementById('content').value = corrected;
 	        });
 	    });
 	</script>

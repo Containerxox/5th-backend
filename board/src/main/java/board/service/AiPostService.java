@@ -21,6 +21,16 @@ public class AiPostService {
 													내용 : {content}
 												""";
     
+    
+    private static final String CORRECT_PROMPT = """
+    		 										content의 값을 읽고 가장 적절한 맞춤법과 문체를 교정해줘.
+    		 										교정된 글만 응답하고 설명은 하지마.
+    		 										원문의 내용과 의미는 변경하지마.
+    		 										
+    		 										내용 : {content}
+    											""";
+
+    
     // 1. 카테고리 자동 추천
     public String recommendCategory(String title, String content) {
     	
@@ -43,6 +53,13 @@ public class AiPostService {
 
     // 3. 맞춤법 교정
     public String correctSpelling(String content) {
-        return null;
+    	
+    	return chatClient.prompt()
+				.user(u -> u.text(CORRECT_PROMPT)
+						.param("content", content)
+					)
+					.call()
+					.content()
+					.trim();
     }
 }
