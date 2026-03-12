@@ -25,6 +25,9 @@
 			  <option value="WEB" th:selected="${post != null and post.categoryType?.name() == 'WEB'}">WEB</option>
 			  <option value="BACKEND" th:selected="${post != null and post.categoryType?.name() == 'BACKEND'}">BACKEND</option>
 		    </select>
+		    <button type="button" class="btn btn-outline-primary btn-sm" id="btn-category">
+		        AI 추천
+		    </button>
 	    </div>
 	  </div>
       <div class="row mb-3 justify-content-md-center">
@@ -50,6 +53,39 @@
   </div>
 
   <th:block th:replace="/layout/footer :: footerLayout"></th:block>
+  	<script>
+	    // 카테고리 자동 추천
+	    document.getElementById('btn-category').addEventListener('click', () => {
+	        const title   = document.getElementById('title').value;
+	        const content = document.getElementById('content').value;
+	        
+	        fetch('/api/ai/category', {
+	            method: 'POST',
+	            headers: { 'Content-Type': 'application/json' },
+	            body: JSON.stringify({title, content})
+	        })
+	        .then(res => res.text())
+	        .then(category => {
+					console.log(category);
+	        });
+	    });
+	
+	    // 맞춤법 교정
+	    document.getElementById('btn-correct').addEventListener('click', () => {
+	        const content = document.getElementById('content').value;
+	
+	        fetch('/api/ai/correct', {
+	            method: 'POST',
+	            headers: { 'Content-Type': 'application/json' },
+	            body: JSON.stringify()
+	        })
+	        .then(res => res.text())
+	        .then(corrected => {
+
+	        });
+	    });
+	</script>
+  
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

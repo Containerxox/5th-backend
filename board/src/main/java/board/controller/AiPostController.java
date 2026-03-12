@@ -20,7 +20,12 @@ public class AiPostController {
 	// POST /api/ai/category
 	@PostMapping("/category")
 	public ResponseEntity<String> recommendCategory(@RequestBody AiRequest request) {
-		return ResponseEntity.ok(null);
+
+		String category = aiPostService.recommendCategory(
+											request.getTitle(), 
+											request.getContent());
+			
+		return ResponseEntity.ok(category);
 	}
 
 	// POST /api/ai/summary
