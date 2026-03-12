@@ -43,11 +43,26 @@
           		th:if="${#authorization.expression('isAuthenticated()')} and ${post?.uid} == ${#authentication.name}">Edit</a>
     		<button class="btn btn-danger me-md-2" type="submit"
     				th:if="${#authorization.expression('isAuthenticated()')} and ${post?.uid} == ${#authentication.name}">Delete</button>
+    		<button type="button" class="btn btn-primary me-md-2" id="btn-summary">
+      		     <span id="summary-spinner" class="spinner-border spinner-border-sm me-1" role="status" style="display:none;"></span>
+   				 <span id="summary-btn-text">AI Summary</span>
+      		</button>
         </div>
       </form>
     </div>
     
-   
+    <div class="row g-5">
+		<div class="col-md-9 col-lg-8">  
+		  <div class="card mt-1" id="summary-box" style="display:none">
+		    <div class="card-body">
+		      <h6 class="card-subtitle mb-2 text-muted">📝 AI 요약</h6>
+		      <p id="summary-text" class="card-text"></p>
+		    </div>
+		  </div>
+		</div>
+	</div>
+	
+	<br>
 
     <div class="row g-5">
       <section>
@@ -106,7 +121,44 @@
   </main>
 
  <th:block th:replace="/layout/footer :: footerLayout"></th:block>
+ 
 
+	<script th:inline="javascript">
+ 		document.getElementById('btn-summary').addEventListener('click', () => {
+	    const title   = /*[[${post.title}]]*/'';
+	    const content = /*[[${post.content}]]*/'';
+
+	    // ✅ pending 시작
+	    const btn = document.getElementById('btn-summary');
+	    const spinner = document.getElementById('summary-spinner');
+	    const btnText = document.getElementById('summary-btn-text');
+
+	    btn.disabled = true;
+	    spinner.style.display = 'inline-block';
+	    btnText.textContent = 'Loading...';
+
+	    fetch('/api/ai/summary', {
+	        method: 'POST',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify({title, content})
+	    })
+	    .then(res => res.text())
+	    .then(summary => {
+	        document.getElementById('summary-text').innerText = summary;
+	        document.getElementById('summary-box').style.display = 'block';
+	    })
+	    .catch(err => {
+	        alert('요약 중 오류가 발생했습니다.');
+	    })
+	    .finally(() => {
+	        // ✅ pending 종료
+	    	  btn.disabled = false;
+	    	  spinner.style.display = 'none';
+	    	  btnText.textContent = 'Summary';
+	    });
+	});
+	</script>
+	
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

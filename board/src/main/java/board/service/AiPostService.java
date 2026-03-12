@@ -29,6 +29,14 @@ public class AiPostService {
     		 										
     		 										내용 : {content}
     											""";
+    
+    private static final String SUMMARY_PROMPT = """
+    													title과 content 값을 읽고 요약을 해줘.
+														요약된 글만 응답하고 설명은 하지마.
+														
+														제목 : {title}
+														내용 : {content}
+												""";
 
     
     // 1. 카테고리 자동 추천
@@ -48,7 +56,14 @@ public class AiPostService {
 
     // 2. 게시글 요약 
     public String summarizePost(String title, String content) {
-        return null;
+    	return chatClient.prompt()
+				.user(u -> u.text(SUMMARY_PROMPT)
+						.param("title", title)
+						.param("content", content)
+					)
+					.call()
+					.content()
+					.trim();
     }
 
     // 3. 맞춤법 교정

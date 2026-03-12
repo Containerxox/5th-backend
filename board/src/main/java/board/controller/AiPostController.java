@@ -31,7 +31,11 @@ public class AiPostController {
 	// POST /api/ai/summary
 	@PostMapping("/summary")
 	public ResponseEntity<String> summarize(@RequestBody AiRequest request) {
-		return ResponseEntity.ok(null);
+		
+		String summary = aiPostService.summarizePost(request.getTitle(), 
+														request.getContent());
+		
+		return ResponseEntity.ok(summary);
 	}
 
 	// POST /api/ai/correct
