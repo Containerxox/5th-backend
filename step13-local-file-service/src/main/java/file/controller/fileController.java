@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -99,5 +100,38 @@ public class fileController {
 					.build());
 		
 		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+	}
+	
+	
+	// 파일 삭제
+	@DeleteMapping("/file-delete")
+	public ResponseEntity<String> deleteFile(
+			@RequestParam("fileName") String fileName){
+		log.info("FileController: /file-delete - {}", fileName);
+		
+		// 1. 삭제할 파일 경로
+		Path filePath = Paths.get(savePath, fileName);
+		File targetFile = filePath.toFile();
+		
+		// 2. 파일 존재 여부 확인  -> 삭제 
+		if(!targetFile.exists()) {
+			log.info("파일 존재 X");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+								.body("파일 없음" + fileName);
+		}
+		
+		// 3. 삭제 성공 -> 파일 삭제 완료: 파일명 , 삭제 실패 -> 파일 삭제 실패: 파일명
+		boolean deleted = targetFile.delete();
+		
+		if(deleted) {
+			log.info("파일 삭제 완료: {}", fileName);
+			return ResponseEntity.status(HttpStatus.OK)
+								.body("삭제 성공: " + fileName);
+		}else {
+			log.info("파일 삭제 실패: {}", fileName);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+								.body("삭제 실패: " + fileName);
+		}
+		
 	}
 }
