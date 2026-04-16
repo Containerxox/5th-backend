@@ -28,11 +28,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-public class fileController {
+public class FileController {
 	
 	@Value("${file.upload.path}")
 	private String savePath;
-	
 	
 	@GetMapping("/file-test")
 	public String home() {
@@ -41,51 +40,48 @@ public class fileController {
 	}
 	
 	
-	
-	// 파일 업로드(저장)
 	@PostMapping("/file-upload")
-	public ResponseEntity<String> uploadFile(
-			@RequestPart("file") MultipartFile file){
+	public ResponseEntity<String> uploadfile(
+			@RequestPart("file") MultipartFile file) {
 		
 		log.info("FileController: /file-upload");
 		log.info("파일명: " + file.getOriginalFilename());
-		log.info("파일크기: {}bytes", file.getSize());
+		log.info("파일크기: {} bytes", file.getSize());
 		log.info("MIME 타입: " + file.getContentType());
-		log.info("savePath: {}",savePath);
+		log.info("savePath: {}", savePath);
 		
-		// 1. 저장 디렉터리 (없으면)생성
+		// 1. 저장 디렉터리 (없으면)생성 
 		File saveDir = new File(savePath);
 		if(!saveDir.exists()) {
 			saveDir.mkdirs(); // mkdir -p
 		}
 		
-		// 2. 파일 저장
+		// 2. 파일저장
 		String uuid = UUID.randomUUID().toString();
-		String originalFilename =  file.getOriginalFilename();
-		String savedFileName = uuid + "_" + originalFilename; 
+		String originalFilename = file.getOriginalFilename();
+		String savedFileName = uuid + "_" + originalFilename;
 		
-		Path saveDirPath = Paths.get(savePath,savedFileName);
+		Path saveDirPath = Paths.get(savePath, savedFileName);
 		try {
 			file.transferTo(saveDirPath.toFile());
-			log.info("파일 저장 완료: {}",saveDirPath);
-		}catch (IllegalStateException | IOException e){
-			log.error("파일 저장 실패: {}",e.getMessage());
+			log.info("파일 저장 완료: {}", saveDirPath);
+		} catch (IllegalStateException | IOException e) {
+			log.error("파일 저장 실패: {}", e.getMessage());
 			return ResponseEntity
-								.status(HttpStatus.INTERNAL_SERVER_ERROR)
-								.body("파일 저장 실패: " + e.getMessage());
+							.status(HttpStatus.INTERNAL_SERVER_ERROR)
+							.body("파일 저장 실패: " + e.getMessage());
 		}
 		
-		return ResponseEntity.ok("업로드");
+		return ResponseEntity.ok("업로드 성공: " + savedFileName);
 	}
 	
-	// 파일 다운로드
 	@GetMapping("/file-download")
-	public ResponseEntity<Resource> downloadFile(
+	public ResponseEntity<Resource> downloadfile(
 			@RequestParam("fileName") String fileName){
 		log.info("FileController: /file-download - {}", fileName);
 		
-		// 0. orginalFilename 추출
-		String orginalFilename = fileName.substring(fileName.indexOf("_") + 1);
+		// 0. originalFilename 추출
+		String originalFilename = fileName.substring(fileName.indexOf("_") + 1);
 		
 		// 1. 다운로드할 파일 경로
 		Path filePath = Paths.get(savePath, fileName);
@@ -99,64 +95,44 @@ public class fileController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 		
-		// 3. Http Headers, Content-Type, Content-Disposition
+		// 3. HTTP Headers, Content-Type, Content-Disposition
+		
 		HttpHeaders headers = new HttpHeaders();
 		
 		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		
 		headers.setContentDisposition(
 				ContentDisposition.builder("attachment")
-					.filename(orginalFilename, StandardCharsets.UTF_8)
-					.build());
+									.filename(originalFilename, StandardCharsets.UTF_8)
+									.build()
+				);
 		
 		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}
 	
-	
-	// 파일 삭제
 	@DeleteMapping("/file-delete")
-	public ResponseEntity<String> deleteFile(
+	public ResponseEntity<String> deletefile(
 			@RequestParam("fileName") String fileName){
+		
 		log.info("FileController: /file-delete - {}", fileName);
 		
 		// 1. 삭제할 파일 경로
 		Path filePath = Paths.get(savePath, fileName);
 		File targetFile = filePath.toFile();
 		
-		// 2. 파일 존재 여부 확인  -> 삭제 
-		// v1
-//		if(!targetFile.exists()) {
-//			log.info("파일 존재 X");
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//								.body("파일 없음" + fileName);
-//		}
-		
-		
-		// 3. 삭제 성공 -> 파일 삭제 완료: 파일명 , 삭제 실패 -> 파일 삭제 실패: 파일명
-//		boolean deleted = targetFile.delete();
-		
-//		if(deleted) {
-//			log.info("파일 삭제 완료: {}", fileName);
-//			return ResponseEntity.status(HttpStatus.OK)
-//								.body("삭제 성공: " + fileName);
-//		}else {
-//			log.info("파일 삭제 실패: {}", fileName);
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//								.body("삭제 실패: " + fileName);
-//		}
-		
-		
-		// v2  (파일 존재 여부 & 파일 삭제 처리 & 파일 삭제 성공 및 실패 여부 출력)
+		// 2. 파일 존재 여부 확인 -> 삭제
+		// v2
 		try {
-			boolean deleted = Files.deleteIfExists(filePath); // 추천: Files.deletedIfExists()
+			boolean deleted = Files.deleteIfExists(filePath);
 			
 			if(deleted) {
 				log.info("파일 삭제 완료: {}", filePath);
 				return ResponseEntity.status(HttpStatus.OK)
-									.body("삭제 성공: " + filePath);
+									.body("삭제 성공: " + fileName);
 			}else {
-				log.info("파일 존재 X: {}", filePath);
+				log.info("파일 없음: {}", filePath);
 				return ResponseEntity.status(HttpStatus.NOT_FOUND)
-									.body("파일 없음" + fileName);
+									.body("파일 없음: " + fileName);
 			}
 		} catch (IOException e) {
 			log.info("파일 삭제 실패: {}", e.getMessage());
@@ -164,9 +140,25 @@ public class fileController {
 								.body("삭제 실패: " + fileName);
 		}
 		
+		// v1
+//		if(!targetFile.exists()) {
+//			log.info("파일 없음");
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//								.body("파일 없음: " + fileName);
+//		}
+//		
+//		// 3. 성공 -> 파일 삭제 완료: 파일명 , 실패 -> 파일 삭제 실패: 메세지
+//		boolean deleted = targetFile.delete();
+//		
+//		if(deleted) {
+//			log.info("파일 삭제 완료: {}", fileName);
+//			return ResponseEntity.status(HttpStatus.OK)
+//								.body("삭제 성공: " + fileName);
+//		} else {
+//			log.info("파일 삭제 실패: {}", fileName);
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//								.body("삭제 실패: " + fileName);
+//		}
+
 	}
-	
-	
-	
-	
 }
