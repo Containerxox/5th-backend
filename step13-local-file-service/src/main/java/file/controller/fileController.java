@@ -114,21 +114,43 @@ public class fileController {
 		File targetFile = filePath.toFile();
 		
 		// 2. 파일 존재 여부 확인  -> 삭제 
-		if(!targetFile.exists()) {
-			log.info("파일 존재 X");
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-								.body("파일 없음" + fileName);
-		}
+		// v1
+//		if(!targetFile.exists()) {
+//			log.info("파일 존재 X");
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//								.body("파일 없음" + fileName);
+//		}
+		
 		
 		// 3. 삭제 성공 -> 파일 삭제 완료: 파일명 , 삭제 실패 -> 파일 삭제 실패: 파일명
-		boolean deleted = targetFile.delete();
+//		boolean deleted = targetFile.delete();
 		
-		if(deleted) {
-			log.info("파일 삭제 완료: {}", fileName);
-			return ResponseEntity.status(HttpStatus.OK)
-								.body("삭제 성공: " + fileName);
-		}else {
-			log.info("파일 삭제 실패: {}", fileName);
+//		if(deleted) {
+//			log.info("파일 삭제 완료: {}", fileName);
+//			return ResponseEntity.status(HttpStatus.OK)
+//								.body("삭제 성공: " + fileName);
+//		}else {
+//			log.info("파일 삭제 실패: {}", fileName);
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//								.body("삭제 실패: " + fileName);
+//		}
+		
+		
+		// v2  (파일 존재 여부 & 파일 삭제 처리 & 파일 삭제 성공 및 실패 여부 출력)
+		try {
+			boolean deleted = Files.deleteIfExists(filePath); // 추천: Files.deletedIfExists()
+			
+			if(deleted) {
+				log.info("파일 삭제 완료: {}", filePath);
+				return ResponseEntity.status(HttpStatus.OK)
+									.body("삭제 성공: " + filePath);
+			}else {
+				log.info("파일 존재 X: {}", filePath);
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+									.body("파일 없음" + fileName);
+			}
+		} catch (IOException e) {
+			log.info("파일 삭제 실패: {}", e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 								.body("삭제 실패: " + fileName);
 		}
