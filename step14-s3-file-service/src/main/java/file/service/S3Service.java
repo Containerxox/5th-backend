@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.endpoints.internal.Substring;
 import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
@@ -40,9 +41,9 @@ public class S3Service {
  private final Map<Long, String> fileStore = new ConcurrentHashMap<>();
  private final AtomicLong fileNoCounter = new AtomicLong(1);
 
- 
+ //
  // 파일 업로드
- 
+ //
  public Long uploadS3File(MultipartFile file) throws IOException {
 	 log.info("S3Service.uploadS3File : {}", file.getOriginalFilename());
 	
@@ -82,53 +83,82 @@ public class S3Service {
  //
  // 파일 다운로드
  //
-// public ResponseEntity<Resource> downloadS3File(Long fileNo) {
-// log.info("S3Service.downloadS3File : fileNo={}", fileNo);
-//
-// // 1. 메모리 Map에서 파일명 조회
-// String savedFileName = fileStore.get(fileNo);
-//
-// // 원본 파일명 추출 (UUID_ 제거)
-//
-//
-// // 2. S3에서 파일 가져오기 (GetObjectRequest)
-//
-//
-// // ResponseInputStream : S3 응답 스트림 (try-with-resources로 자동 닫힘 주의)
-//
-//
-// // 3. InputStreamResource로 래핑
-// Resource resource = new InputStreamResource(s3Stream);
-//
-// // 4. HTTP 헤더 설정
-// HttpHeaders headers = new HttpHeaders();
-//
-//
-// return new ResponseEntity<>(resource, headers, HttpStatus.OK);
-// }
+ public ResponseEntity<Resource> downloadS3File(Long fileNo) {
+	 log.info("S3Service.downloadS3File : fileNo={}", fileNo);
+	
+	 // 1. 메모리 Map에서 파일명 조회
+	 String savedFileName = fileStore.get(fileNo);
+	if(savedFileName == null)
+	{
+		throw new NoSuchElementException("파일 번호 없음: " + fileNo);
+	}
+	
+	 // 원본 파일명 추출 (UUID_ 제거)
+	 String originalFileName = savedFileName.contains("_")?
+			 					savedFileName.substring(savedFileName.indexOf("_") + 1) : savedFileName;
+	
+	 // 2. S3에서 파일 가져오기 (GetObjectRequest)
+	 GetObjectRequest getRequest = GetObjectRequest.builder()
+			 									.bucket(bucketName)
+			 									.key(DIR_NAME + "/" + savedFileName)
+			 									.build();
+	
+	// ResponseInputStream : S3 응답 스트림 (try-with-resources로 자동 닫힘 주의)
+	ResponseInputStream<GetObjectResponse> s3Stream;
+	
+	try {
+		s3Stream = s3Client.getObject(getRequest);		
+	}catch(S3Exception e) {
+		log.info("S3 다운로드 실패: ", e.awsErrorDetails());
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	}
+	
+
+	 // 3. InputStreamResource로 래핑
+	 Resource resource = new InputStreamResource(s3Stream);
+	
+	 // 4. HTTP 헤더 설정
+	 HttpHeaders headers = new HttpHeaders();
+	headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+	headers.setContentDisposition(
+			ContentDisposition.builder("attachment")
+			.filename(originalFileName,StandardCharsets.UTF_8)
+			.build()
+	);
+	
+	 return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+ }
 
  //
  // 파일 삭제
  //
-// public void deleteS3File(Long fileNo) {
-// log.info("S3Service.deleteS3File : fileNo={}", fileNo);
-//
-// // 1. 메모리 Map에서 파일명 조회
-//
-//
-// // 2. S3 파일 삭제 (DeleteObjectRequest)
-//
-//
-// // 3. 메모리 Map에서도 제거
-// fileStore.remove(fileNo);
-//
-// log.info("S3 삭제 완료 : key={}", DIR_NAME + "/" + savedFileName);
-// }
-//
-// //
-// // 파일 목록 조회 (메모리 Map)
-// //
-// public Map<Long, String> listFiles() {
-// return fileStore;
-// }
+ public void deleteS3File(Long fileNo) {
+	 log.info("S3Service.deleteS3File : fileNo={}", fileNo);
+	
+	 // 1. 메모리 Map에서 파일명 조회
+	 String savedFileName = fileStore.get(fileNo);
+	
+	 if(savedFileName == null) {
+		 throw new NoSuchElementException("파일 없음: fileNo= " + fileNo);
+	 }
+	 
+	 // 2. S3 파일 삭제 (DeleteObjectRequest)
+	 DeleteObjectRequest deleterequest = DeleteObjectRequest.builder()
+			 											.bucket(bucketName)
+			 											.key(DIR_NAME + "/" + savedFileName)
+			 											.build();
+	 s3Client.deleteObject(deleterequest);
+	
+	 // 3. 메모리 Map에서도 제거
+	 fileStore.remove(fileNo);
+	
+	 log.info("S3 삭제 완료 : key={}", DIR_NAME + "/" + savedFileName);
+	 }
+	
+	 //
+	 // 파일 목록 조회 (메모리 Map)
+	 //
+	 public Map<Long, String> listFiles() {
+		 return fileStore;
+	 }
 }
