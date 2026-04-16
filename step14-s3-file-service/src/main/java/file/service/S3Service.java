@@ -9,14 +9,20 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.endpoints.internal.Substring;
 import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -29,6 +35,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class S3Service {
 
  private final S3Client s3Client;
+ private final S3Presigner s3Presigner;
 
  @Value("${cloud.aws.s3.bucket}")
  private String bucketName;
@@ -161,4 +168,32 @@ public class S3Service {
 	 public Map<Long, String> listFiles() {
 		 return fileStore;
 	 }
+
+	 //
+	 // 파일 다운로드용 임시 서명된 url 생성
+	 // 
+	public String generateDownloadPresignedUrl(Long fileNo, int expireMin) {
+		
+		// 1. 파일, 시간
+		String savedFileName = fileStore.get(fileNo);
+		if(savedFileName == null) {
+			 throw new NoSuchElementException("파일 없음: fileNo= " + fileNo);
+		 }
+
+		
+		
+		GetObjectPresignRequest presignedRequest = GetObjectPresignRequest.builder()
+																	.getObjectRequest(req -> req.bucket(bucketName)
+																								.key(DIR_NAME + "/" + savedFileName))
+																	.signatureDuration(Duration.ofMinutes(expireMin))
+																	.build();
+		
+		PresignedGetObjectRequest presigned = s3Presigner.presignGetObject(presignedRequest);
+		log.info("Presigned URL 생성 완료 ({}분 유효): {}", expireMin, presigned.url());
+		
+		
+		return presigned.url().toString();
+	}
+
+	
 }

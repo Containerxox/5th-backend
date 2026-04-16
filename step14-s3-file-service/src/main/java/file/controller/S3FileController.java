@@ -83,4 +83,17 @@ public class S3FileController {
 	 public ResponseEntity<Map<Long, String>> listFiles() {
 		 return ResponseEntity.ok(s3Service.listFiles());
 	 }
+	 
+	 
+	 
+	 // 다운로드용 Presigned URL 발급
+	 @GetMapping("/api/s3/presign/download/{fileNo}")
+	 public ResponseEntity<String> getDownloadPresignedUrl(
+	 @PathVariable Long fileNo,
+	 @RequestParam(defaultValue = "10") int expireMin) {
+		 
+		 String url = s3Service.generateDownloadPresignedUrl(fileNo, expireMin);
+		 
+		 return ResponseEntity.ok(url);
+	 }
 }
