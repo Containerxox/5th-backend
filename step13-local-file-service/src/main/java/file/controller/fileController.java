@@ -33,6 +33,15 @@ public class fileController {
 	@Value("${file.upload.path}")
 	private String savePath;
 	
+	
+	@GetMapping("/file-test")
+	public String home() {
+		log.info("FileController: /file-test");
+		return "file-test";
+	}
+	
+	
+	
 	// 파일 업로드(저장)
 	@PostMapping("/file-upload")
 	public ResponseEntity<String> uploadFile(
@@ -156,4 +165,8 @@ public class fileController {
 		}
 		
 	}
+	
+	
+	
+	
 }

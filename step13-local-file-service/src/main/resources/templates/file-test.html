@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>파일 관리 서비스</title>
+    <style>
+		/* Reset & Base */
+		*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+		
+		body {
+		    font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+		    background: #f0f4f8;
+		    color: #2d3748;
+		    min-height: 100vh;
+		    padding: 2rem;
+		}
+		
+		/* Layout */
+		.container {
+		    max-width: 720px;
+		    margin: 0 auto;
+		}
+		
+		.page-title {
+		    font-size: 1.75rem;
+		    font-weight: 700;
+		    color: #1a202c;
+		    margin-bottom: 0.5rem;
+		}
+		
+		.page-subtitle {
+		    color: #718096;
+		    font-size: 0.95rem;
+		    margin-bottom: 2rem;
+		}
+		
+		/* Card */
+		.card {
+		    background: #ffffff;
+		    border-radius: 12px;
+		    padding: 1.75rem;
+		    margin-bottom: 1.25rem;
+		    box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+		}
+		
+		.card-title {
+		    font-size: 1rem;
+		    font-weight: 600;
+		    color: #2d3748;
+		    margin-bottom: 1.25rem;
+		    display: flex;
+		    align-items: center;
+		    gap: 0.5rem;
+		}
+		
+		.card-title::before {
+		    content: '';
+		    display: inline-block;
+		    width: 4px;
+		    height: 18px;
+		    border-radius: 2px;
+		    background: #4299e1;
+		}
+		
+		/* Upload Zone */
+		.upload-zone {
+		    border: 2px dashed #cbd5e0;
+		    border-radius: 10px;
+		    padding: 2rem;
+		    text-align: center;
+		    cursor: pointer;
+		    transition: border-color 0.2s, background 0.2s;
+		    background: #f7fafc;
+		    margin-bottom: 1rem;
+		}
+		
+		.upload-zone:hover,
+		.upload-zone.drag-over {
+		    border-color: #4299e1;
+		    background: #ebf8ff;
+		}
+		
+		.upload-icon {
+		    font-size: 2.5rem;
+		    margin-bottom: 0.75rem;
+		    display: block;
+		}
+		
+		.upload-zone p {
+		    color: #718096;
+		    font-size: 0.9rem;
+		}
+		
+		.upload-zone .file-name-display {
+		    margin-top: 0.75rem;
+		    font-size: 0.875rem;
+		    color: #4299e1;
+		    font-weight: 500;
+		    display: none;
+		}
+		
+		#fileInput {
+		    display: none;
+		}
+		
+		/* Buttons */
+		.btn {
+		    display: inline-flex;
+		    align-items: center;
+		    gap: 0.4rem;
+		    padding: 0.6rem 1.25rem;
+		    border-radius: 8px;
+		    font-size: 0.9rem;
+		    font-weight: 500;
+		    cursor: pointer;
+		    border: none;
+		    transition: opacity 0.15s, transform 0.1s;
+		    text-decoration: none;
+		}
+		
+		.btn:active { transform: scale(0.98); }
+		.btn:hover  { opacity: 0.88; }
+		
+		.btn-primary  { background: #4299e1; color: #fff; }
+		.btn-success  { background: #48bb78; color: #fff; }
+		.btn-danger   { background: #f56565; color: #fff; }
+		.btn-outline  {
+		    background: transparent;
+		    border: 1.5px solid #cbd5e0;
+		    color: #4a5568;
+		}
+		
+		.btn-full { width: 100%; justify-content: center; }
+		
+		/* Form Input */
+		.form-group {
+		    margin-bottom: 1rem;
+		}
+		
+		.form-label {
+		    display: block;
+		    font-size: 0.85rem;
+		    font-weight: 500;
+		    color: #4a5568;
+		    margin-bottom: 0.4rem;
+		}
+		
+		.form-input {
+		    width: 100%;
+		    padding: 0.6rem 0.875rem;
+		    border: 1.5px solid #e2e8f0;
+		    border-radius: 8px;
+		    font-size: 0.9rem;
+		    color: #2d3748;
+		    transition: border-color 0.2s;
+		    outline: none;
+		}
+		
+		.form-input:focus {
+		    border-color: #4299e1;
+		    box-shadow: 0 0 0 3px rgba(66,153,225,0.15);
+		}
+		
+		/* Toast */
+		.toast-wrap {
+		    position: fixed;
+		    bottom: 1.5rem;
+		    right: 1.5rem;
+		    z-index: 999;
+		    display: flex;
+		    flex-direction: column;
+		    gap: 0.5rem;
+		}
+		
+		.toast {
+		    padding: 0.75rem 1.25rem;
+		    border-radius: 8px;
+		    font-size: 0.875rem;
+		    font-weight: 500;
+		    color: #fff;
+		    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+		    animation: slideIn 0.3s ease;
+		}
+		
+		.toast.success { background: #48bb78; }
+		.toast.error   { background: #f56565; }
+		
+		@keyframes slideIn {
+		    from { transform: translateX(120%); opacity: 0; }
+		    to   { transform: translateX(0);    opacity: 1; }
+		}
+		
+		/* Divider */
+		.divider {
+		    border: none;
+		    border-top: 1px solid #e2e8f0;
+		    margin: 1.25rem 0;
+		}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="page-title">파일 관리 서비스</h1>
+    <p class="page-subtitle">로컬 서버에 파일을 업로드하고 관리합니다.</p>
+
+    <!-- 파일 업로드 -->
+    <div class="card">
+        <div class="card-title">파일 업로드</div>
+
+        <div class="upload-zone" id="uploadZone">
+            <span class="upload-icon"></span>
+            <p>클릭하거나 파일을 여기로 드래그하세요</p>
+            <p style="font-size:0.8rem; margin-top:0.25rem;">최대 10MB</p>
+            <div class="file-name-display" id="fileNameDisplay"></div>
+        </div>
+
+        <input type="file" id="fileInput" name="file">
+
+        <button class="btn btn-primary btn-full" onclick="doUpload()">
+            업로드
+        </button>
+    </div>
+
+    <!-- 파일 다운로드 -->
+    <div class="card">
+        <div class="card-title">파일 다운로드</div>
+        <div class="form-group">
+            <label class="form-label" for="downloadInput">저장된 파일명 (UUID_원본명)</label>
+            <input type="text" id="downloadInput" class="form-input"
+                   placeholder="예) a1b2c3_profile.jpg">
+        </div>
+        <button class="btn btn-success btn-full" onclick="doDownload()">
+            다운로드
+        </button>
+    </div>
+
+    <!-- 파일 삭제 -->
+    <div class="card">
+        <div class="card-title">파일 삭제</div>
+        <div class="form-group">
+            <label class="form-label" for="deleteInput">삭제할 파일명 (UUID_원본명)</label>
+            <input type="text" id="deleteInput" class="form-input"
+                   placeholder="예) a1b2c3_profile.jpg">
+        </div>
+        <button class="btn btn-danger btn-full" onclick="doDelete()">
+            삭제
+        </button>
+    </div>
+</div>
+
+<!-- Toast 알림 영역 -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+	//드래그 앤 드롭
+	const uploadZone     = document.getElementById('uploadZone');
+	const fileInput      = document.getElementById('fileInput');
+	const fileNameDisplay = document.getElementById('fileNameDisplay');
+	
+	uploadZone.addEventListener('click', () => fileInput.click());
+	
+	uploadZone.addEventListener('dragover', (e) => {
+	    e.preventDefault();
+	    uploadZone.classList.add('drag-over');
+	});
+	
+	uploadZone.addEventListener('dragleave', () => {
+	    uploadZone.classList.remove('drag-over');
+	});
+	
+	uploadZone.addEventListener('drop', (e) => {
+	    e.preventDefault();
+	    uploadZone.classList.remove('drag-over');
+	    fileInput.files = e.dataTransfer.files;
+	    showSelectedFile();
+	});
+	
+	fileInput.addEventListener('change', showSelectedFile);
+	
+	function showSelectedFile() {
+	    const file = fileInput.files[0];
+	    if (file) {
+	        fileNameDisplay.style.display = 'block';
+	        fileNameDisplay.textContent = '선택됨: ' + file.name
+	            + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+	    }
+	}
+	
+	
+	/* ==========================================================
+	   실습 1. 파일 업로드
+	   - FormData 에 파일을 담아 POST /file-upload 로 전송한다.
+	   - 응답이 성공(res.ok)이면 success Toast 를 표시하고
+	     다운로드·삭제 입력창에 저장된 파일명을 자동으로 채운다.
+	   - 실패 또는 네트워크 오류 시 error Toast 를 표시한다.
+	   ========================================================== */
+	async function doUpload() {
+	
+	    // ① 선택된 파일 가져오기 (없으면 오류 Toast 후 종료)
+	    const file = _________;
+	    if (!file) { showToast(___________, 'error'); return; }
+	
+	    // ② FormData 생성 후 'file' 키로 파일 추가
+	    const formData = new _________;
+	    formData.________('file', file);
+	
+	    try {
+	        // ③ POST /file-upload 로 요청 전송
+	        const res = await fetch(_________, {
+	            method: _________,
+	            body: formData
+	        });
+	
+	        const text = await res.text();
+	
+	        if (res.ok) {
+	            // ④ 성공 Toast 표시
+	            showToast(text, _________);
+	
+	            // ⑤ 응답 텍스트에서 파일명 추출 후 입력창에 자동 입력
+	            const savedName = text.replace('업로드 성공: ', '');
+	            document.getElementById(_________).value = savedName;
+	            document.getElementById(_________).value = savedName;
+	        } else {
+	            showToast(text, _________);
+	        }
+	
+	    } catch (e) {
+	        showToast('네트워크 오류: ' + _________, 'error');
+	    }
+	}
+	
+	
+	/* ==========================================================
+	   실습 2. 파일 다운로드
+	   - 입력창에서 파일명을 읽어 GET /file-download?fileName=... 를
+	     a 태그로 트리거하여 브라우저 다운로드를 실행한다.
+	   ========================================================== */
+	function doDownload() {
+	
+	    // ① 입력창에서 파일명 가져오기 (없으면 오류 Toast 후 종료)
+	    const fileName = document.getElementById(_________).value._________;
+	    if (!fileName) { showToast(___________, 'error'); return; }
+	
+	    // ② a 태그를 동적으로 생성하여 다운로드 트리거
+	    const a = document.createElement(_________);
+	    a.href     = '/file-download?fileName=' + _________(fileName);
+	    a.download = fileName;
+	
+	    document.body.appendChild(a);
+	    a._________;                        // ③ 클릭 실행
+	    document.body.removeChild(a);
+	
+	    showToast('다운로드를 시작합니다.', _________);
+	}
+	
+	
+	/* ==========================================================
+	   실습 3. 파일 삭제
+	   - 입력창에서 파일명을 읽어 DELETE /file-delete?fileName=... 로
+	     요청을 전송한다.
+	   - confirm() 으로 삭제 여부를 먼저 확인한다.
+	   ========================================================== */
+	async function doDelete() {
+	
+	    // ① 입력창에서 파일명 가져오기 (없으면 오류 Toast 후 종료)
+	    const fileName = document.getElementById(_________).value.trim();
+	    if (!fileName) { showToast(___________, 'error'); return; }
+	
+	    // ② confirm 으로 삭제 확인 (취소 시 중단)
+	    if (!confirm(fileName + '\n\n위 파일을 삭제하시겠습니까?')) _________;
+	
+	    try {
+	        // ③ DELETE /file-delete?fileName=... 로 요청 전송
+	        const res = await fetch(
+	            '/file-delete?fileName=' + _________(fileName),
+	            { method: _________ }
+	        );
+	
+	        const text = await res.text();
+	
+	        // ④ 성공·실패에 따라 Toast 표시
+	        showToast(text, res.ok ? _________ : _________);
+	
+	    } catch (e) {
+	        showToast('네트워크 오류: ' + _________, 'error');
+	    }
+	}
+	
+	
+	/* ==========================================================
+	   Toast 알림 (완성 코드 — 수정 불필요)
+	   ========================================================== */
+	function showToast(message, type = 'success') {
+	    const wrap  = document.getElementById('toastWrap');
+	    const toast = document.createElement('div');
+	    toast.className  = 'toast ' + type;
+	    toast.textContent = message;
+	    wrap.appendChild(toast);
+	    setTimeout(() => toast.remove(), 3500);
+	}
+</script>
+</body>
+</html>
