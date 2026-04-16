@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
+import file.util.FileValidator;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -49,6 +50,17 @@ public class FileController {
 		log.info("파일크기: {} bytes", file.getSize());
 		log.info("MIME 타입: " + file.getContentType());
 		log.info("savePath: {}", savePath);
+		
+		
+		// 0. 파일 검증
+		try {
+			FileValidator.validate(file);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		// 1. 저장 디렉터리 (없으면)생성 
 		File saveDir = new File(savePath);
