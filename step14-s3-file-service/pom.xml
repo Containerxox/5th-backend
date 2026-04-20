@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.5</version>
+		<version>3.5.13</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example.file</groupId>
@@ -29,22 +29,20 @@
 	<properties>
 		<java.version>17</java.version>
 		<!-- AWS SDK v2 BOM 버전 관리 -->
-		<aws.sdk.version>2.29.50</aws.sdk.version>
+ 		<aws.sdk.version>2.29.50</aws.sdk.version>
 	</properties>
-	
-	 <!-- AWS SDK v2 BOM : 모든 SDK 모듈의 버전을 일괄 관리 -->
-	 <dependencyManagement>
-		 <dependencies>
-			 <dependency>
-				 <groupId>software.amazon.awssdk</groupId>
-				 <artifactId>bom</artifactId>
-				 <version>${aws.sdk.version}</version>
-				 <type>pom</type>
-				 <scope>import</scope>
-			 </dependency>
-		 </dependencies>
-	 </dependencyManagement>
-	
+ <!-- AWS SDK v2 BOM : 모든 SDK 모듈의 버전을 일괄 관리 -->
+  <dependencyManagement>
+ 	<dependencies>
+ 	  <dependency>
+ 		  <groupId>software.amazon.awssdk</groupId>
+ 		  <artifactId>bom</artifactId>
+ 		  <version>${aws.sdk.version}</version>
+ 		  <type>pom</type>
+ 		  <scope>import</scope>
+ 	    </dependency>
+ 	  </dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -52,7 +50,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webmvc</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
 		<dependency>
@@ -68,20 +66,20 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf-test</artifactId>
+			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- AWS SDK v2 — S3 -->
+		<!-- BOM으로 버전 관리되므로 <version> 태그 불필요 -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webmvc-test</artifactId>
-			<scope>test</scope>
+		  <groupId>software.amazon.awssdk</groupId>
+	   	  <artifactId>s3</artifactId>
 		</dependency>
-		 <!-- AWS SDK v2 — S3 -->
-		 <!-- BOM으로 버전 관리되므로 <version> 태그 불필요 -->
-		 <dependency>
-			 <groupId>software.amazon.awssdk</groupId>
-			 <artifactId>s3</artifactId>
-		 </dependency>
+		<!-- Spring Boot Actuator -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
