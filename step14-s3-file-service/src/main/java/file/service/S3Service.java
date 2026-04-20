@@ -19,6 +19,8 @@ import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -193,6 +195,40 @@ public class S3Service {
 		
 		
 		return presigned.url().toString();
+	}
+
+
+	//
+	// 파일 업로드용 임시 서명된 url 생성
+	//
+	public Map<String, String> generateUploadPresignedUrl(String originalFileName, String contentType, int expireMin) {
+		
+		// 1. S3 key, MIME 타입, 유효시간
+		String savedFileName = UUID.randomUUID() + "_" + originalFileName;
+		String s3Key = DIR_NAME + "/" + savedFileName;
+		
+		PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
+																		.signatureDuration(Duration.ofMinutes(expireMin))
+																		.putObjectRequest(req -> req.bucket(bucketName)
+																									.key(s3Key)
+																									.contentType(contentType))
+																		.build();
+		
+		PresignedPutObjectRequest presigned = s3Presigner.presignPutObject(presignRequest);
+		log.info("업로드 Presigned URL 생성 완료 (key={}, 유효시간={}분)", s3Key, expireMin);
+
+		// Map 필요 정보 저장
+		Long fileNo = fileNoCounter.getAndIncrement();
+		fileStore.put(fileNo, savedFileName);
+		
+		// 응답 Map: fileNo, key, contentType, expireMin, presignedUrl
+		Map<String, String> result = Map.of("fileNo", fileNo.toString(),
+											"key", s3Key,
+											"contentType", contentType,
+											"expireMin", String.valueOf(expireMin),
+											"presignedUrl", presigned.url().toString());
+		
+		return result;
 	}
 
 	

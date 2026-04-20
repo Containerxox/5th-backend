@@ -89,11 +89,24 @@ public class S3FileController {
 	 // 다운로드용 Presigned URL 발급
 	 @GetMapping("/api/s3/presign/download/{fileNo}")
 	 public ResponseEntity<String> getDownloadPresignedUrl(
-	 @PathVariable Long fileNo,
-	 @RequestParam(defaultValue = "10") int expireMin) {
+			 @PathVariable Long fileNo,
+			 @RequestParam(defaultValue = "10") int expireMin) {
 		 
 		 String url = s3Service.generateDownloadPresignedUrl(fileNo, expireMin);
 		 
 		 return ResponseEntity.ok(url);
+	 }
+	 
+	 
+	// 업로드용 Presigned URL 발급
+	 @GetMapping("/api/s3/presign/upload")
+	 public ResponseEntity<Map<String, String>> getUploadPresignedUrl(
+			 @RequestParam String fileName,
+			 @RequestParam(defaultValue = "application/octet-stream") String contentType,
+			 @RequestParam(defaultValue = "10") int expireMin) {
+		 
+		 Map<String, String> result = s3Service.generateUploadPresignedUrl(fileName, contentType, expireMin);
+		 
+		 return ResponseEntity.ok(result);
 	 }
 }
